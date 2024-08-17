@@ -1,6 +1,5 @@
 package com.survey.rol.application;
 
-import com.survey.rol.domain.entity.Rol;
 import com.survey.rol.domain.service.RolService;
 
 public class DeleteRolUseCase {
@@ -10,7 +9,7 @@ public class DeleteRolUseCase {
     this.rolService = rolService;
   }
 
-  public Rol execute(int id) {
+  public boolean execute(int id) {
     return this.rolService.delete(id);
   }
 }
