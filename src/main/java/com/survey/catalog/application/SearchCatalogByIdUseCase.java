@@ -1,18 +1,18 @@
-package com.survey.rol.application;
+package com.survey.catalog.application;
 
 import java.util.Optional;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
 
-public class SearchRolByIdUseCase {
-  private RolService rolService;
+public class SearchCatalogByIdUseCase {
+  private CatalogService catalogService;
 
-  public SearchRolByIdUseCase(RolService rolService) {
-    this.rolService = rolService;
+  public SearchCatalogByIdUseCase(CatalogService catalogService) {
+    this.catalogService = catalogService;
   }
 
-  public Optional<Rol> execute(int id) {
-    return this.rolService.searchById(id);
+  public Optional<Catalog> execute(int id) {
+    return this.catalogService.searchById(id);
   }
 }

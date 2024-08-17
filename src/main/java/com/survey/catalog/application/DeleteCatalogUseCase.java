@@ -1,16 +1,15 @@
-package com.survey.rol.application;
+package com.survey.catalog.application;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.catalog.domain.service.CatalogService;
 
-public class DeleteRolUseCase {
-  private RolService rolService;
+public class DeleteCatalogUseCase {
+  private CatalogService catalogService;
 
-  public DeleteRolUseCase(RolService rolService) {
-    this.rolService = rolService;
+  public DeleteCatalogUseCase(CatalogService catalogService) {
+    this.catalogService = catalogService;
   }
 
-  public Rol execute(int id) {
-    return this.rolService.delete(id);
+  public boolean execute(int id) {
+    return this.catalogService.delete(id);
   }
 }

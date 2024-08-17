@@ -1,19 +1,19 @@
-package com.survey.rol.application;
+package com.survey.catalog.application;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
 
-public class ShowAllRolesUseCase {
-  private RolService rolService;
+public class ShowAllCatalogsUseCase {
+  private CatalogService catalogService;
 
-  public ShowAllRolesUseCase(RolService rolService) {
-    this.rolService = rolService;
+  public ShowAllCatalogsUseCase(CatalogService catalogService) {
+    this.catalogService = catalogService;
   }
 
-  public Optional<List<Rol>> execute() {
-    return this.rolService.showAll();
+  public Optional<List<Catalog>> execute() {
+    return this.catalogService.showAll();
   }
 }
