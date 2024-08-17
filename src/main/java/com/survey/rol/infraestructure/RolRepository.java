@@ -1,5 +1,7 @@
 package com.survey.rol.infraestructure;
 
-public class RolRepository {
+import com.survey.rol.domain.service.RolService;
+
+public class RolRepository implements RolService {
 
 }
