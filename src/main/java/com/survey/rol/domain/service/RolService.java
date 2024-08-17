@@ -7,8 +7,12 @@ import com.survey.rol.domain.entity.Rol;
 
 public interface RolService {
   void add(Rol rol);
+
   Optional<Rol> searchById(int id);
+
   Optional<List<Rol>> showAll();
+
   void update(Rol rol);
-  Rol delete(int id);
+
+  boolean delete(int id);
 }
