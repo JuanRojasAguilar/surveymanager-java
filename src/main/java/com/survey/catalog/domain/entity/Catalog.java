@@ -4,10 +4,8 @@ import java.util.Date;
 
 public class Catalog {
   private int id;
-
   private Date createdAt;
   private Date updatedAt;
-
   private String name;
 
   public Catalog() {

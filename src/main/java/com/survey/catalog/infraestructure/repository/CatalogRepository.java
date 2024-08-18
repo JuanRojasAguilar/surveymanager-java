@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -31,7 +32,7 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public void add(Catalog catalog) {
-    String sql = "INSERT INTO catalogs (name) VALUES (?)";
+    String sql = "INSERT INTO catalogs (name, created_at) VALUES (?, (CURDATE()))";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setString(1, catalog.getName());
@@ -43,15 +44,18 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public Optional<Catalog> searchById(int id) {
-    String sql = "SELECT name FROM catalogs WHERE id = ?";
+    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
+          int idCatalog = response.getInt("id_catalog");
           String name = response.getString("name");
-          return Optional.of(new Catalog(name));
+          Date createdAt = response.getDate("created_at");
+          Date updatedAt = response.getDate("updated_at");
+          return Optional.of(new Catalog(idCatalog, name, createdAt, updatedAt));
         }
       }
     } catch (SQLException e) {
