@@ -1,4 +1,4 @@
-package com.survey.rol.infraestructure.repository;
+package com.survey.catalog.infraestructure.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,17 +7,18 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
 
-public class RolRepository implements RolService {
+public class CatalogRepository implements CatalogService {
   private Connection connection;
 
-  public RolRepository() {
+  public CatalogRepository() {
     try {
       Properties props = new Properties();
       props.load(getClass().getClassLoader().getResourceAsStream("db.properties"));
@@ -31,11 +32,11 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public void add(Rol rol) {
-    String sql = "INSERT INTO roles (name) VALUES (?)";
+  public void add(Catalog catalog) {
+    String sql = "INSERT INTO catalogs (name, created_at) VALUES (?, (CURDATE()))";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, rol.getName());
+      statement.setString(1, catalog.getName());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -43,15 +44,19 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public Optional<Rol> searchById(int id) {
-    String sql = "SELECT name FROM roles WHERE id = ?";
+  public Optional<Catalog> searchById(int id) {
+    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
+      statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
+          int idCatalog = response.getInt("id_catalog");
           String name = response.getString("name");
-          return Optional.of(new Rol(name));
+          Date createdAt = response.getDate("created_at");
+          Date updatedAt = response.getDate("updated_at");
+          return Optional.of(new Catalog(idCatalog, name, createdAt, updatedAt));
         }
       }
     } catch (SQLException e) {
@@ -61,34 +66,37 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public Optional<List<Rol>> showAll(int limit, int offset) {
-    String sql = "SELECT * FROM roles LIMIT ?, ?";
-    List<Rol> roles = new ArrayList<>();
+  public Optional<List<Catalog>> showAll(int limit, int offset) {
+    List<Catalog> catalogs = new ArrayList<>();
+    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs LIMIT ?, ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, limit);
       statement.setInt(2, offset);
       try (ResultSet response = statement.executeQuery()) {
         while (response.next()) {
-          int id = response.getInt("id_rol");
+          int idCatalog = response.getInt("id_catalog");
           String name = response.getString("name");
-          roles.add(new Rol(id, name));
+          Date createdAt = response.getDate("created_at");
+          Date updatedAt = response.getDate("updated_at");
+          catalogs.add(new Catalog(idCatalog, name, createdAt, updatedAt));
         }
-        return Optional.of(roles);
+        return Optional.of(catalogs);
       }
     } catch (SQLException e) {
       e.printStackTrace();
       return Optional.empty();
     }
+
   }
 
   @Override
-  public void update(Rol rol) {
-    String sql = "UPDATE TABLE roles SET name = ? WHERE id = ?";
+  public void update(Catalog catalog) {
+    String sql = "UPDATE TABLE catalogs SET name = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, rol.getName());
-      statement.setInt(2, rol.getId());
+      statement.setString(1, catalog.getName());
+      statement.setInt(2, catalog.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -97,7 +105,7 @@ public class RolRepository implements RolService {
 
   @Override
   public boolean delete(int id) {
-    String sql = "DELETE FROM roles WHERE id = ?";
+    String sql = "DELETE FROM catalogs WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);

@@ -1,19 +1,18 @@
 package com.survey.rol.application;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.survey.rol.domain.entity.Rol;
 import com.survey.rol.domain.service.RolService;
 
-public class ShowAllRolesUseCase {
+public class SearchRolByIdUseCase {
   private RolService rolService;
 
-  public ShowAllRolesUseCase(RolService rolService) {
+  public SearchRolByIdUseCase(RolService rolService) {
     this.rolService = rolService;
   }
 
-  public Optional<List<Rol>> execute(int limit, int offset) {
-    return this.rolService.showAll(limit, offset);
+  public Optional<Rol> execute(int id) {
+    return this.rolService.searchById(id);
   }
 }
