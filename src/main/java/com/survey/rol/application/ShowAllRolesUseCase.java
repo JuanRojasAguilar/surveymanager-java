@@ -13,7 +13,7 @@ public class ShowAllRolesUseCase {
     this.rolService = rolService;
   }
 
-  public Optional<List<Rol>> execute() {
-    return this.rolService.showAll();
+  public Optional<List<Rol>> execute(int limit, int offset) {
+    return this.rolService.showAll(limit, offset);
   }
 }

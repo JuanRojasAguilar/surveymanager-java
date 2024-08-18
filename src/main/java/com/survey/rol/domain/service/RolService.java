@@ -10,7 +10,7 @@ public interface RolService {
 
   Optional<Rol> searchById(int id);
 
-  Optional<List<Rol>> showAll();
+  Optional<List<Rol>> showAll(int limit, int offset);
 
   void update(Rol rol);
 

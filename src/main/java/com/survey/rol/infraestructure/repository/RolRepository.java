@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -47,7 +48,6 @@ public class RolRepository implements RolService {
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
-      statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
           String name = response.getString("name");
@@ -61,8 +61,25 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public Optional<List<Rol>> showAll() {
-    throw new UnsupportedOperationException("Unimplemented method 'showAll'");
+  public Optional<List<Rol>> showAll(int limit, int offset) {
+    String sql = "SELECT * FROM roles LIMIT ?, ?";
+    List<Rol> roles = new ArrayList<>();
+    try {
+      PreparedStatement statement = connection.prepareStatement(sql);
+      statement.setInt(1, limit);
+      statement.setInt(2, offset);
+      try (ResultSet response = statement.executeQuery()) {
+        while (response.next()) {
+          int id = response.getInt("id_rol");
+          String name = response.getString("name");
+          roles.add(new Rol(id, name));
+        }
+        return Optional.of(roles);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
   }
 
   @Override
