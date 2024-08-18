@@ -18,3 +18,5 @@ services:
       - MYSQL_DATABASE=sourvey_jr
     ports:
       - "3306:3306"
+    volumes:
+      - ./src/main/java/resources/database/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
