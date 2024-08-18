@@ -1,4 +1,4 @@
-package com.survey.rol.infraestructure.repository;
+package com.survey.question.infraestructure.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
 
-public class RolRepository implements RolService {
+public class QuestionRepository implements QuestionService {
   private Connection connection;
 
-  public RolRepository() {
+  public QuestionRepository() {
     try {
       Properties props = new Properties();
       props.load(getClass().getClassLoader().getResourceAsStream("db.properties"));
@@ -30,11 +30,11 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public void add(Rol rol) {
-    String sql = "INSERT INTO roles (name) VALUES (?)";
+  public void add(Question question) {
+    String sql = "INSERT INTO questiones (name) VALUES (?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, rol.getName());
+      statement.setString(1, question.getName());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -42,8 +42,8 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public Optional<Rol> searchById(int id) {
-    String sql = "SELECT name FROM roles WHERE id = ?";
+  public Optional<Question> searchById(int id) {
+    String sql = "SELECT name FROM questiones WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
@@ -51,7 +51,7 @@ public class RolRepository implements RolService {
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
           String name = response.getString("name");
-          return Optional.of(new Rol(name));
+          return Optional.of(new Question(name));
         }
       }
     } catch (SQLException e) {
@@ -61,17 +61,17 @@ public class RolRepository implements RolService {
   }
 
   @Override
-  public Optional<List<Rol>> showAll() {
+  public Optional<List<Question>> showAll(int limit, int offset) {
     throw new UnsupportedOperationException("Unimplemented method 'showAll'");
   }
 
   @Override
-  public void update(Rol rol) {
-    String sql = "UPDATE TABLE roles SET name = ? WHERE id = ?";
+  public void update(Question question) {
+    String sql = "UPDATE TABLE questiones SET name = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, rol.getName());
-      statement.setInt(2, rol.getId());
+      statement.setString(1, question.getName());
+      statement.setInt(2, question.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -80,7 +80,7 @@ public class RolRepository implements RolService {
 
   @Override
   public boolean delete(int id) {
-    String sql = "DELETE FROM roles WHERE id = ?";
+    String sql = "DELETE FROM questiones WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
