@@ -13,7 +13,7 @@ public class ShowAllCatalogsUseCase {
     this.catalogService = catalogService;
   }
 
-  public Optional<List<Catalog>> execute() {
-    return this.catalogService.showAll();
+  public Optional<List<Catalog>> execute(int limit, int offset) {
+    return this.catalogService.showAll(limit, offset);
   }
 }

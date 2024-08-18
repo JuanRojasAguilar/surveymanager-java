@@ -10,7 +10,7 @@ public interface CatalogService {
 
   Optional<Catalog> searchById(int id);
 
-  Optional<List<Catalog>> showAll();
+  Optional<List<Catalog>> showAll(int limit, int offset);
 
   void update(Catalog catalog);
 

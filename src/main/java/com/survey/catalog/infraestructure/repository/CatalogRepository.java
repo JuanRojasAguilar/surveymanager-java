@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -65,8 +66,28 @@ public class CatalogRepository implements CatalogService {
   }
 
   @Override
-  public Optional<List<Catalog>> showAll() {
-    throw new UnsupportedOperationException("Unimplemented method 'showAll'");
+  public Optional<List<Catalog>> showAll(int limit, int offset) {
+    List<Catalog> catalogs = new ArrayList<>();
+    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs LIMIT ?, ?";
+    try {
+      PreparedStatement statement = connection.prepareStatement(sql);
+      statement.setInt(1, limit);
+      statement.setInt(2, offset);
+      try (ResultSet response = statement.executeQuery()) {
+        while (response.next()) {
+          int idCatalog = response.getInt("id_catalog");
+          String name = response.getString("name");
+          Date createdAt = response.getDate("created_at");
+          Date updatedAt = response.getDate("updated_at");
+          catalogs.add(new Catalog(idCatalog, name, createdAt, updatedAt));
+        }
+        return Optional.of(catalogs);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
+
   }
 
   @Override
