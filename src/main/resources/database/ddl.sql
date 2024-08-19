@@ -13,7 +13,7 @@ CREATE TABLE roles (
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT,
     enable boolean,
-    username VARCHAR(12) NOT NULL,
+    username VARCHAR(12) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     CONSTRAINT pk_id_users PRIMARY KEY (id)
 );
@@ -56,7 +56,7 @@ CREATE TABLE chapter (
     chapter_title VARCHAR(50),
     CONSTRAINT pk_id_chapter PRIMARY KEY(id),
     CONSTRAINT fk_survey_id_chapter FOREIGN KEY (survey_id)
-    REFERENCES surveys(id)
+    REFERENCES surveys(id) ON DELETE CASCADE
 );
 
 CREATE TABLE questions (
@@ -70,7 +70,7 @@ CREATE TABLE questions (
     question_text TEXT NOT NULL,
     CONSTRAINT pk_id_questions PRIMARY KEY (id),
     CONSTRAINT fk_chapter_id_questions FOREIGN KEY (chapter_id)
-    REFERENCES chapter(id)
+    REFERENCES chapter(id) ON DELETE CASCADE
 );
 
 CREATE TABLE response_options (
@@ -86,11 +86,11 @@ CREATE TABLE response_options (
     option_text TEXT,
     CONSTRAINT pk_id_response_options PRIMARY KEY (id),
     CONSTRAINT fk_question_id_response_options FOREIGN KEY (question_id)
-    REFERENCES questions(id),
+    REFERENCES questions(id) ON DELETE CASCADE,
     CONSTRAINT fk_parentresponse_id_response_options FOREIGN KEY (parentresponse_id)
     REFERENCES response_options(id),
     CONSTRAINT fk_categoryecatalog_id_response_options FOREIGN KEY (categorycatalog_id)
-    REFERENCES catalogs(id)
+    REFERENCES catalogs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE subresponse_options (
@@ -103,7 +103,7 @@ CREATE TABLE subresponse_options (
     subresponse_text VARCHAR(255),
     CONSTRAINT pk_id_subresponse_options PRIMARY KEY (id),
     CONSTRAINT fk_responseoptions_id_subresponse_options FOREIGN KEY(responseoptions_id)
-    REFERENCES response_options(id)
+    REFERENCES response_options(id) ON DELETE CASCADE
 );
 
 CREATE TABLE response_questions (
@@ -115,7 +115,7 @@ CREATE TABLE response_questions (
     CONSTRAINT fk_response_id_response_questions FOREIGN KEY (response_id)
     REFERENCES response_options(id),
     CONSTRAINT fk_subresponse_id_subresponse_options FOREIGN KEY (subresponse_id)
-    REFERENCES subresponse_options(id)
+    REFERENCES subresponse_options(id) ON DELETE CASCADE
 );
 
 DELIMITER $$
