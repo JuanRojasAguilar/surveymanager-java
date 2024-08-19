@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -31,10 +32,13 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public void add(Question question) {
-    String sql = "INSERT INTO questiones (name) VALUES (?)";
+    String sql = "INSERT INTO questions (question_number, response_type, comment_question, question_text) VALUES (?, ?, ?, ?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, question.getName());
+      statement.setString(1, question.getQuestionNumber());
+      statement.setString(2, question.getResponseType());
+      statement.setString(3, question.getCommentQuestion());
+      statement.setString(4, question.getQuestionText());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -43,15 +47,18 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public Optional<Question> searchById(int id) {
-    String sql = "SELECT name FROM questiones WHERE id = ?";
+    String sql = "SELECT question_number, response_type, comment_question, question_text FROM questions WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
-          String name = response.getString("name");
-          return Optional.of(new Question(name));
+          String questionNumber = response.getString("question_number");
+          String responseType = response.getString("response_type");
+          String commentQuestion = response.getString("comment_question");
+          String questionText = response.getString("question_text");
+          return Optional.of(new Question(id, questionNumber, responseType, commentQuestion, questionText));
         }
       }
     } catch (SQLException e) {
@@ -62,16 +69,37 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public Optional<List<Question>> showAll(int limit, int offset) {
-    throw new UnsupportedOperationException("Unimplemented method 'showAll'");
+    String sql = "SELECT id_question, question_number, response_type, comment_question, question_text FROM questions";
+    List<Question> questions = new ArrayList<>();
+    try {
+      PreparedStatement statement = connection.prepareStatement(sql);
+      statement.executeUpdate();
+      try (ResultSet response = statement.executeQuery()) {
+        if (response.next()) {
+          int questionId = response.getInt("id_question");
+          String questionNumber = response.getString("question_number");
+          String responseType = response.getString("response_type");
+          String commentQuestion = response.getString("comment_question");
+          String questionText = response.getString("question_text");
+          questions.add(new Question(questionId, questionNumber, responseType, commentQuestion, questionText));
+        }
+        return Optional.of(questions);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return Optional.empty();
   }
 
   @Override
   public void update(Question question) {
-    String sql = "UPDATE TABLE questiones SET name = ? WHERE id = ?";
+    String sql = "UPDATE TABLE questiones SET question_number = ?, response_type = ?, comment_question = ?, question_text = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, question.getName());
-      statement.setInt(2, question.getId());
+      statement.setString(1, question.getQuestionNumber());
+      statement.setString(2, question.getResponseType());
+      statement.setString(3, question.getCommentQuestion());
+      statement.setString(4, question.getQuestionText());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -80,7 +108,7 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public boolean delete(int id) {
-    String sql = "DELETE FROM questiones WHERE id = ?";
+    String sql = "DELETE FROM questions WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
