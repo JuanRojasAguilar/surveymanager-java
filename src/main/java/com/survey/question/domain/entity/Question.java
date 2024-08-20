@@ -1,16 +1,17 @@
-package com.survey.rol.domain.entity;
+package com.survey.question.domain.entity;
 
-public class Rol {
+public class Question {
   private int id;
   private String name;
 
-  public Rol() {}
+  public Question() {
+  }
 
-  public Rol(String name) {
+  public Question(String name) {
     this.setName(name);
   }
 
-  public Rol(int id, String name) {
+  public Question(int id, String name) {
     this.setId(id);
     this.setName(name);
   }
