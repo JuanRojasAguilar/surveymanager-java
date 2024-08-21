@@ -37,7 +37,7 @@ public class AdminJFrame extends JFrame {
         JButton returnButton = new JButton("<--");
         returnButton.addActionListener(e -> {
             setVisible(false);
-            new Login(null);
+            new Login();
         });
         topPanel.add(returnButton);
         add(topPanel, BorderLayout.NORTH);
@@ -52,9 +52,10 @@ public class AdminJFrame extends JFrame {
         JButton surveyButton = new JButton("surveyManager");
         surveyButton.setPreferredSize(new Dimension(175, 75));
         surveyButton.addActionListener(e -> {
-            setVisible(false);
-            JFrame surveyFrame = new SurveyAdminFrame(returnSetVisibleFunction(this));
+            SurveyAdminFrame surveyFrame = new SurveyAdminFrame();
+            surveyFrame.setReturnActionListener(returnSetVisibleFunction(surveyFrame));
             surveyFrame.setLocationRelativeTo(buttonsPanel);
+            setVisible(false);
             surveyFrame.setVisible(true);
         });
         buttonsPanel.add(surveyButton, gbc);
@@ -110,11 +111,11 @@ public class AdminJFrame extends JFrame {
         add(buttonsPanel, BorderLayout.CENTER);
     }
 
-    private ActionListener returnSetVisibleFunction(JFrame panelToFalse) {
+    private ActionListener returnSetVisibleFunction(JFrame panelToDispose) {
         return new ActionListener() {
             @Override
                 public void actionPerformed(ActionEvent e) {
-                    remove(panelToFalse);
+                    panelToDispose.dispose();
                     setVisible(true);
                 }
         };

@@ -17,8 +17,8 @@ import com.survey.rol.application.SearchRolByIdUseCase;
 
 public class Login extends JFrame {
     // private User user;
-    // private SearchUserByIdUseCase searchUserByIdUseCase;
-    private SearchRolByIdUseCase searchRolByIdUseCase;
+    // private rolInitializer
+    // private userInitializer
 
     JPanel loginPanel;
     JPanel resgisterPanel;
@@ -26,10 +26,8 @@ public class Login extends JFrame {
     JTextField userField;
     JPasswordField passwordField;
 
-    public Login( //SearchUserByIdUseCase searchUserByIdUseCase,
-    SearchRolByIdUseCase searchRolByIdUseCase) {
-        // this.searchUserByIdUseCase = searchUserByIdUseCase;
-        this.searchRolByIdUseCase = searchRolByIdUseCase;
+    public Login() {
+        
 
         createLoginFrame();
 
