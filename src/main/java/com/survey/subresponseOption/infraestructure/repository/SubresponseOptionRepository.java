@@ -51,7 +51,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
           String name = response.getString("name");
-          return Optional.of(new SubresponseOption(name));
+          return Optional.of(new SubresponseOption());
         }
       }
     } catch (SQLException e) {

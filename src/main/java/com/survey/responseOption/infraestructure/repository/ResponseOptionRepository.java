@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -32,7 +33,7 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public void add(ResponseOption responseOption) {
-    String sql = "INSERT INTO responseOptions (id_category_catalog, id_parent_response, id_question, comment_response, option_text) VALUES (?,?,?,?,?)";
+    String sql = "INSERT INTO subresponse_options (id_category_catalog, id_parent_response, id_question, comment_response, option_text) VALUES (?,?,?,?,?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, responseOption.getIdCategoryCatalog());
@@ -48,11 +49,10 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public Optional<ResponseOption> searchById(int id) {
-    String sql = "SELECT id_category_catalog, id_parent_response, id_question, comment_response, option_text, created_at, updated_at FROM responseOptiones WHERE id = ?";
+    String sql = "SELECT id_category_catalog, id_parent_response, id_question, comment_response, option_text, created_at, updated_at FROM subresponse_options WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
-      statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
           int idCategoryCatalog = response.getInt("id_category_catalog");
@@ -73,16 +73,43 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public Optional<List<ResponseOption>> showAll() {
-    throw new UnsupportedOperationException("Unimplemented method 'showAll'");
+    String sql = "SELECT id_response_option ,id_question, id_category_catalog, id_parent_response, id_question, comment_response, option_text, created_at, updated_at FROM subresponse_options WHERE id = ?";
+    List<ResponseOption> responseOptions = new ArrayList<>();
+    try {
+      PreparedStatement statement = connection.prepareStatement(sql);
+      try (ResultSet response = statement.executeQuery()) {
+        if (response.next()) {
+          int idResponseOption = response.getInt("id_response_option");
+          int idCategoryCatalog = response.getInt("id_category_catalog");
+          int idParentResponse = response.getInt("id_parent_response");
+          int idQuestion = response.getInt("id_question");
+          String commentResponse = response.getString("comment_response");
+          String optionText = response.getString("option_text");
+          Date createdAt = response.getDate("created_at");
+          Date updatedAt = response.getDate("updatedAt");
+          responseOptions.add(new ResponseOption(idResponseOption, idCategoryCatalog, idParentResponse, idQuestion, commentResponse, optionText, createdAt, updatedAt));
+        }
+        return Optional.of(responseOptions);
+      }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return Optional.empty();
+    }
   }
 
   @Override
   public void update(ResponseOption responseOption) {
-    String sql = "UPDATE TABLE responseOptiones SET name = ? WHERE id = ?";
+    String sql = "UPDATE TABLE response_options SET id_question = ?, id_category_catalog = ?, id_parent_response = ?, id_question = ?, comment_response = ?, option_text = ?, created_at = ?, updated_at = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, responseOption);
-      statement.setInt(2, responseOption.getId());
+      statement.setInt(1, responseOption.getIdQuestion());
+      statement.setInt(2, responseOption.getIdCategoryCatalog());
+      statement.setInt(3, responseOption.getIdParentResponse());
+      statement.setInt(4, responseOption.getIdQuestion());
+      statement.setString(5, responseOption.getCommentResponse());
+      statement.setString(6, responseOption.getOptionText());
+      statement.setDate(7, new java.sql.Date(responseOption.getCreatedAt().getTime()));
+      statement.setDate(8, new java.sql.Date(responseOption.getUpdatedAt().getTime()));
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -91,7 +118,7 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public boolean delete(int id) {
-    String sql = "DELETE FROM responseOptiones WHERE id = ?";
+    String sql = "DELETE FROM response_options WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
