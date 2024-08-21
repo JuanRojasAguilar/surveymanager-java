@@ -77,7 +77,7 @@ public class QuestionRepository implements QuestionService {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
-        if (response.next()) {
+        while (response.next()) {
           int idQuestion = response.getInt("id_question");
           int idChapter = response.getInt("id_chapter");
           String questionNumber = response.getString("question_number");

@@ -78,7 +78,7 @@ public class ResponseOptionRepository implements ResponseOptionService {
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       try (ResultSet response = statement.executeQuery()) {
-        if (response.next()) {
+        while (response.next()) {
           int idResponseOption = response.getInt("id_response_option");
           int idCategoryCatalog = response.getInt("id_category_catalog");
           int idParentResponse = response.getInt("id_parent_response");
