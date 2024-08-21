@@ -1,4 +1,4 @@
-package com.survey.catalog.infraestructure.ui;
+package com.survey.chapter.infraestructure.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,15 +13,20 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class CatalogAdminFrame extends JFrame{
+import com.survey.catalog.infraestructure.ui.CreateCatalogJFrame;
+import com.survey.catalog.infraestructure.ui.DeleteCatalogJFrame;
+import com.survey.catalog.infraestructure.ui.ListCatalogsJFrame;
+import com.survey.catalog.infraestructure.ui.UpdateCatalogJFrame;
+
+public class ChapterAdminButton extends JFrame {
     private JButton returnButton;
 
-    public CatalogAdminFrame() {
-        createCatalogFrame();
+    public ChapterAdminButton() {
+        createChapterFrame();
     }
 
-    private void createCatalogFrame() {
-        setTitle("CatalogFrame");
+    private void createChapterFrame() {
+        setTitle("ChapterFrame");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -43,11 +48,11 @@ public class CatalogAdminFrame extends JFrame{
         JButton createButton = new JButton("createManager");
         createButton.setPreferredSize(new Dimension(175, 75));
         createButton.addActionListener(e -> {
-            CreateCatalogJFrame createCatalogJFrame = new CreateCatalogJFrame();
-            createCatalogJFrame.setReturnActionListener(returnSetVisibleFunction(createCatalogJFrame));
-            createCatalogJFrame.setLocationRelativeTo(buttonsPanel);
+            CreateChapterJFrame createChapterJFrame = new CreateChapterJFrame();
+            createChapterJFrame.setReturnActionListener(returnSetVisibleFunction(createChapterJFrame));
+            createChapterJFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            createCatalogJFrame.setVisible(true);
+            createChapterJFrame.setVisible(true);
         });
         buttonsPanel.add(createButton, gbc);
         
@@ -55,11 +60,11 @@ public class CatalogAdminFrame extends JFrame{
         JButton deleteButton = new JButton("deleteManager");
         deleteButton.setPreferredSize(new Dimension(175, 75));
         deleteButton.addActionListener(e -> {
-            DeleteCatalogJFrame deleteCatalogJframe = new DeleteCatalogJFrame();
-            deleteCatalogJframe.setReturnActionListener(returnSetVisibleFunction(deleteCatalogJframe));
-            deleteCatalogJframe.setLocationRelativeTo(buttonsPanel);
+            DeleteChapterJFrame deleteChapterJframe = new DeleteChapterJFrame();
+            deleteChapterJframe.setReturnActionListener(returnSetVisibleFunction(deleteChapterJframe));
+            deleteChapterJframe.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            deleteCatalogJframe.setVisible(true);
+            deleteChapterJframe.setVisible(true);
         });
         buttonsPanel.add(deleteButton, gbc);
 
@@ -69,11 +74,11 @@ public class CatalogAdminFrame extends JFrame{
         JButton updateButton = new JButton("updateManager");
         updateButton.setPreferredSize(new Dimension(175, 75));
         updateButton.addActionListener(e -> {
-            UpdateCatalogJFrame updateCatalogJFrame = new UpdateCatalogJFrame();
-            updateCatalogJFrame.setReturnActionListener(returnSetVisibleFunction(updateCatalogJFrame));
-            updateCatalogJFrame.setLocationRelativeTo(buttonsPanel);
+            UpdateChapterJFrame updateChapterJFrame = new UpdateChapterJFrame();
+            updateChapterJFrame.setReturnActionListener(returnSetVisibleFunction(updateChapterJFrame));
+            updateChapterJFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            updateCatalogJFrame.setVisible(true);
+            updateChapterJFrame.setVisible(true);
             
         });
         buttonsPanel.add(updateButton, gbc);
@@ -82,11 +87,11 @@ public class CatalogAdminFrame extends JFrame{
         JButton listButton = new JButton("listManager");
         listButton.setPreferredSize(new Dimension(175, 75));
         listButton.addActionListener(e -> {
-            ListCatalogsJFrame listCatalogsJFrame = new ListCatalogsJFrame();
-            listCatalogsJFrame.setReturnActionListener(returnSetVisibleFunction(listCatalogsJFrame));
-            listCatalogsJFrame.setLocationRelativeTo(buttonsPanel);
+            ListChaptersJFrame listChaptersJFrame = new ListChaptersJFrame();
+            listChaptersJFrame.setReturnActionListener(returnSetVisibleFunction(listChaptersJFrame));
+            listChaptersJFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            listCatalogsJFrame.setVisible(true);
+            listChaptersJFrame.setVisible(true);
         });
         buttonsPanel.add(listButton, gbc);
 

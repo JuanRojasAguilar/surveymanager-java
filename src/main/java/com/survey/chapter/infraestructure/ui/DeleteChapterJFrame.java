@@ -1,4 +1,4 @@
-package com.survey.catalog.infraestructure.ui;
+package com.survey.chapter.infraestructure.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -13,27 +13,27 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.survey.catalog.domain.entity.Catalog;
+import com.survey.chapter.domain.entity.Chapter;
 import com.survey.ui.StyleDefiner;
 
-public class DeleteCatalogJFrame extends JFrame{
-    private CatalogComboBox catalogComboBox;
+public class DeleteChapterJFrame extends JFrame{
+    private ChapterComboBox chapterComboBox;
     private JButton returnButton;
 
     //initializer
 
-    public DeleteCatalogJFrame() {
+    public DeleteChapterJFrame() {
         initComponents();
 
-        createDeleteCatalog();
+        createDeleteChapter();
     }
 
     private void initComponents() {
-        catalogComboBox = new CatalogComboBox();
+        chapterComboBox = new ChapterComboBox();
     }
 
-    private void createDeleteCatalog() {
-        setTitle("Delete Catalog");
+    private void createDeleteChapter() {
+        setTitle("Delete Chapter");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -52,12 +52,12 @@ public class DeleteCatalogJFrame extends JFrame{
         int row = 0;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabel = new JLabel("Catalog");
+        JLabel comboBoxLabel = new JLabel("Chapter");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
-        catalogComboBox.updateCatalogs();
-        formPanel.add(catalogComboBox, gbc);
+        chapterComboBox.updateChapters();
+        formPanel.add(comboBoxLabel);
 
         row++;
         gbc.gridx = 0;
@@ -66,18 +66,18 @@ public class DeleteCatalogJFrame extends JFrame{
         gbc.anchor = GridBagConstraints.CENTER;
         JButton deleteButton = StyleDefiner.defineButtonStyle(new JButton("Borrar"));
         deleteButton.addActionListener(e -> {
-            Catalog catalog = catalogComboBox.getSelectedCatalog();
+            Chapter chapter = chapterComboBox.getSelectedChapter();
 
-            int continuar = JOptionPane.showConfirmDialog(catalogComboBox, "seguro que quieres eliminar a este usuario?", "¿?", JOptionPane.YES_NO_OPTION);
+            int continuar = JOptionPane.showConfirmDialog(chapterComboBox, "seguro que quieres eliminar a este chapter?", "¿?", JOptionPane.YES_NO_OPTION);
 
             if (continuar == 0) {
                 // initializer del delete
                 JOptionPane.showMessageDialog(null, "eliminado correctamente", "eliminado", JOptionPane.INFORMATION_MESSAGE);
-                catalogComboBox.updateCatalogs();
+                chapterComboBox.updateChapters();
             }
         });
     }
-    
+
     public void setReturnActionListener(ActionListener actionListener) {
         returnButton.addActionListener(actionListener);
     }

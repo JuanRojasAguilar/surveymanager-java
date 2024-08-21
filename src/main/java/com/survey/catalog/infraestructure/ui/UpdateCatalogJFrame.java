@@ -75,7 +75,6 @@ public class UpdateCatalogJFrame extends JFrame{
         row++;
         gbc.gridx = 0;
         gbc.gridy = row;
-        gbc.anchor = GridBagConstraints.WEST;
         JLabel nombreLabel = new JLabel("nombre: ");
         formPanel.add(nombreLabel, gbc);
 
