@@ -1,4 +1,4 @@
-package com.survey.survey.infraestructure.ui;
+package com.survey.catalog.infraestructure.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -15,23 +15,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.catalog.domain.entity.Catalog;
 import com.survey.ui.StyleDefiner;
 
-public class UpdateSurveyJFrame extends JFrame {
-    //surveyInitializer 
+public class UpdateCatalogJFrame extends JFrame{
+        private JButton returnButton;
 
-    private JButton returnButton;
+        private CatalogComboBox catalogComboBox;
+        private JTextField nombreField;
+        private JButton updateButton;
 
-    private SurveyComboBox surveyComboBox;
-    private JTextField nombreField;
-    private JTextField descField;
-    private JButton updateButton;
+        private boolean initializer;
 
-    private boolean initializer;
+        private int idToUpdate;
+    
 
-    private int idToUpdate;
-
-    public UpdateSurveyJFrame() {
+    public UpdateCatalogJFrame() {
         
         initializer = true;
 
@@ -43,11 +42,11 @@ public class UpdateSurveyJFrame extends JFrame {
     }
 
     private void initComponents() {
-        surveyComboBox = new SurveyComboBox(getSelectedSurvey());
+        catalogComboBox = new CatalogComboBox(getSelectedCatalog());
     }
 
     private void createUpdateFrame() {
-        setTitle("Update Survey");
+        setTitle("Update Catalog");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -66,12 +65,12 @@ public class UpdateSurveyJFrame extends JFrame {
         int row = 0;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabel = new JLabel("survey");
+        JLabel comboBoxLabel = new JLabel("catalog");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
-        surveyComboBox.updateSurveys();
-        formPanel.add(surveyComboBox, gbc);
+        catalogComboBox.updateCatalogs();
+        formPanel.add(catalogComboBox, gbc);
 
         row++;
         gbc.gridx = 0;
@@ -88,41 +87,29 @@ public class UpdateSurveyJFrame extends JFrame {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        JLabel descLabel = new JLabel("descripcion: ");
-        formPanel.add(descLabel, gbc);
-        
-        gbc.gridx = 1;
-        descField = StyleDefiner.defineFieldStyle(new JTextField(20));
-        descField.setEditable(false);
-        formPanel.add(descField, gbc);
-
-        row++;
-        gbc.gridy = row;
-        gbc.gridx = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         updateButton = StyleDefiner.defineButtonStyle(new JButton("actualizar"));
         updateButton.setEnabled(false);
-        updateButton.addActionListener(actualizarSurvey());
+        updateButton.addActionListener(actualizarCatalog());
         formPanel.add(updateButton, gbc);
 
         add(formPanel, BorderLayout.CENTER);
     }
 
-    private ActionListener actualizarSurvey() {
+    private ActionListener actualizarCatalog() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 String nombre = nombreField.getText();
-                String desc = descField.getText();
-
-                if (nombre.isEmpty() ||
-                desc.isEmpty()) {
+                
+                if (nombre.isEmpty()) {
                     JOptionPane.showMessageDialog(nombreField, "campos incompletos", "erroe", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
 
-                //Survey survey = new Survey(nombre, desc);
+                Catalog catalog = new Catalog(nombre);
+                catalog.setId(idToUpdate);
 
                 //initializer
 
@@ -131,20 +118,18 @@ public class UpdateSurveyJFrame extends JFrame {
         };
     }
 
-    private ActionListener getSelectedSurvey() {
+    private ActionListener getSelectedCatalog() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
-                    //Survey survey = surveyComboBox.getSelectedSurvey();
-                    nombreField.setText(survey.getName());
-                    descField.setText(survey.getDesc());
+                    Catalog catalog = catalogComboBox.getSelectedCatalog();
+                    nombreField.setText(catalog.getName());
                     nombreField.setEditable(true);
-                    descField.setEditable(true);
                     updateButton.setEnabled(true);
 
 
-                    idToUpdate = survey.getId();
+                    idToUpdate = catalog.getId();
                 }
             }
         };
@@ -153,4 +138,5 @@ public class UpdateSurveyJFrame extends JFrame {
     public void setReturnActionListener(ActionListener actionListener) {
         returnButton.addActionListener(actionListener);
     }
+
 }

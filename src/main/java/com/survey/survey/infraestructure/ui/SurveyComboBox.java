@@ -3,6 +3,7 @@ package com.survey.survey.infraestructure.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 public class SurveyComboBox extends JPanel{
@@ -10,7 +11,7 @@ public class SurveyComboBox extends JPanel{
     private JComboBox<Survey> surveyComboBox;
 
     public SurveyComboBox() {
-        surveyComboBox = new SurveyComboBox();
+        surveyComboBox = new JComboBox();
 
         setLayout(new BorderLayout());
 
@@ -18,7 +19,7 @@ public class SurveyComboBox extends JPanel{
     }
 
     public SurveyComboBox(ActionListener actionListenerComboBox) {
-        surveyComboBox = new SurveyComboBox();
+        surveyComboBox = new JComboBox();
         surveyComboBox.addActionListener(actionListenerComboBox);
 
         setLayout(new BorderLayout());
@@ -48,6 +49,6 @@ public class SurveyComboBox extends JPanel{
     }
 
     public Survey getSelectedSurvey() {
-        return surveyComboBox.getSelectedItem();
-    }
+        return (Survey) surveyComboBox.getSelectedItem();
+    } 
 }

@@ -1,4 +1,4 @@
-package com.survey.survey.infraestructure.ui;
+package com.survey.catalog.infraestructure.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,31 +17,36 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class ListSurveysJFrame extends JFrame {
+import com.survey.catalog.domain.entity.Catalog;
+import com.survey.survey.infraestructure.ui.SurveyComboBox;
+
+public class ListCatalogsJFrame extends JFrame{
     private DefaultTableModel model;
     private JTable table;
     private JScrollPane scrollPane;
-    private SurveyComboBox surveyComboBox;
+    private CatalogComboBox catalogComboBox;
     private JButton returnButton;
 
     private boolean initializer;
 
-    public ListSurveysJFrame() {
+    //initializer
+
+    public ListCatalogsJFrame() {
         initializer = true;
 
         initComponents();
 
-        createListSurveys();
+        createListCatalogs();
 
         initializer = false;
     }
 
     private void initComponents() {
-        surveyComboBox = new SurveyComboBox(getSelectedSurvey());
+        catalogComboBox = new CatalogComboBox(getSelectedCatalog());
     }
 
-    private void createListSurveys() {
-        setTitle("List Survey");
+    private void createListCatalogs() {
+        setTitle("List Catalogs");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -60,12 +65,12 @@ public class ListSurveysJFrame extends JFrame {
         int row = 0;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabel = new JLabel("survey");
+        JLabel comboBoxLabel = new JLabel("Catalog");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
-        surveyComboBox.updateSurveys();
-        formPanel.add(surveyComboBox, gbc);
+        catalogComboBox.updateCatalogs();
+        formPanel.add(catalogComboBox, gbc);
 
         row++;
         gbc.gridx = 0;
@@ -74,7 +79,7 @@ public class ListSurveysJFrame extends JFrame {
         gbc.weighty = 1;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
-        String[] columnNames = {"id", "nombre", "descripcion", "createdAt", "updatedAt"};
+        String[] columnNames = {"id", "nombre", "createdAt", "updatedAt"};
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
         table.setRowHeight(100);
@@ -84,33 +89,32 @@ public class ListSurveysJFrame extends JFrame {
         table.getColumnModel().getColumn(1).setPreferredWidth(100);
         table.getColumnModel().getColumn(2).setPreferredWidth(100);
         table.getColumnModel().getColumn(3).setPreferredWidth(100);
-        table.getColumnModel().getColumn(4).setPreferredWidth(100);
 
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 
-        showAllSurveys();
+        showAllCatalogs();
 
         add(formPanel, BorderLayout.CENTER);
     }
 
-    private void showAllSurveys() {
+    private void showAllCatalogs() {
         // list from initializer
 
-        surveys.forEach(survey -> {
-            Object[] rowData = {};
+        catalogs.forEach(catalog -> {
+            Object[] rowData = {catalog.getId(), catalog.getName(), catalog.getCreatedAt(), catalog.getUpdatedAt()};
             model.addRow(rowData);
         });
     }
 
-    private ActionListener getSelectedSurvey() {
+    private ActionListener getSelectedCatalog() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
-                    //Survey survey = surveyComboBox.getSelectedSurvey();
+                    Catalog catalog = catalogComboBox.getSelectedCatalog();
                     model.setRowCount(0);
-                    Object[] rowData = {};
+                    Object[] rowData = {catalog.getId(), catalog.getName(), catalog.getCreatedAt(), catalog.getUpdatedAt()};
                     model.addRow(rowData);
                 }
             }
