@@ -14,6 +14,17 @@ public class ResponseOption {
 
   public ResponseOption() {}
 
+  public ResponseOption(int id, int idCategoryCatalog, int idParentResponse, int idQuestion, String commentResponse, String optionText, Date createdAt, Date updatedAt) {
+    this.setId(id);
+    this.setIdCategoryCatalog(idCategoryCatalog);
+    this.setIdParentResponse(idParentResponse);
+    this.setIdQuestion(idQuestion);
+    this.setCommentResponse(commentResponse);
+    this.setOptionText(optionText);
+    this.setCreatedAt(createdAt);
+    this.setUpdatedAt(updatedAt);
+  }
+
   public void setId(int id) {
     this.id = id;
   }

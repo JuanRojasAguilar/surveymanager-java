@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -31,10 +32,14 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public void add(ResponseOption responseOption) {
-    String sql = "INSERT INTO responseOptiones (name) VALUES (?)";
+    String sql = "INSERT INTO responseOptions (id_category_catalog, id_parent_response, id_question, comment_response, option_text) VALUES (?,?,?,?,?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, responseOption.getName());
+      statement.setInt(1, responseOption.getIdCategoryCatalog());
+      statement.setInt(2, responseOption.getIdParentResponse());
+      statement.setInt(3, responseOption.getIdQuestion());
+      statement.setString(4, responseOption.getCommentResponse());
+      statement.setString(5, responseOption.getOptionText());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -43,15 +48,21 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public Optional<ResponseOption> searchById(int id) {
-    String sql = "SELECT name FROM responseOptiones WHERE id = ?";
+    String sql = "SELECT id_category_catalog, id_parent_response, id_question, comment_response, option_text, created_at, updated_at FROM responseOptiones WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
-          String name = response.getString("name");
-          return Optional.of(new ResponseOption(name));
+          int idCategoryCatalog = response.getInt("id_category_catalog");
+          int idParentResponse = response.getInt("id_parent_response");
+          int idQuestion = response.getInt("id_question");
+          String commentResponse = response.getString("comment_response");
+          String optionText = response.getString("option_text");
+          Date createdAt = response.getDate("created_at");
+          Date updatedAt = response.getDate("updatedAt");
+          return Optional.of(new ResponseOption(id, idCategoryCatalog, idParentResponse, idQuestion, commentResponse, optionText, createdAt, updatedAt));
         }
       }
     } catch (SQLException e) {
@@ -70,7 +81,7 @@ public class ResponseOptionRepository implements ResponseOptionService {
     String sql = "UPDATE TABLE responseOptiones SET name = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, responseOption.getName());
+      statement.setString(1, responseOption);
       statement.setInt(2, responseOption.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
