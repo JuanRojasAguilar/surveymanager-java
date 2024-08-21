@@ -30,7 +30,12 @@ public class CreateChapterJFrame extends JFrame{
     private SurveyComboBox surveyComboBox;
 
     public CreateChapterJFrame() {
+        initComponents();
         createCreateFrame();
+    }
+
+    private void initComponents() {
+        surveyComboBox = new SurveyComboBox();
     }
 
     private void createCreateFrame() {
@@ -111,7 +116,7 @@ public class CreateChapterJFrame extends JFrame{
 
                 //initializer
 
-                JOptionPane.showMessageDialog(titleField, "usuario guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(titleField, "chapter guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }
             
         };   

@@ -43,7 +43,8 @@ public class UpdateChapterJFrame extends JFrame{
     }
 
     private void initComponents() {
-        ChapterComboBox chapterComboBox = new ChapterComboBox(getSelectedChapter());
+        chapterComboBox = new ChapterComboBox(getSelectedChapter());
+        surveyComboBox = new SurveyComboBox();
     }
 
     private void createUpdateFrame() {

@@ -13,12 +13,13 @@ public class Chapter {
   public Chapter() {
   }
 
-  public Chapter(int id, int idSurvey, String chapterNumber, String chapterTitle, Date createdAt) {
+  public Chapter(int id, int idSurvey, String chapterNumber, String chapterTitle, Date createdAt, Date updatedAt) {
     this.setId(id);
     this.setIdSurvey(idSurvey);
     this.setChapterNumber(chapterNumber);
     this.setChapterTitle(chapterTitle);
     this.setCreatedAt(createdAt != null ? createdAt : new Date());
+    this.setUpdatedAt(updatedAt != null ? createdAt : new Date());
   }
 
   public void setId(int id) {

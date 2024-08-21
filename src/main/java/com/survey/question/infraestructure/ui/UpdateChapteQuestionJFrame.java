@@ -3,11 +3,11 @@ package com.survey.question.infraestructure.ui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,40 +15,46 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
 import com.survey.chapter.domain.entity.Chapter;
 import com.survey.chapter.infraestructure.ui.ChapterComboBox;
 import com.survey.question.domain.entity.Question;
-import com.survey.survey.infraestructure.ui.SurveyComboBox;
 import com.survey.ui.StyleDefiner;
 
-public class CreateQuestionJFrame extends JFrame {
-    //catalog initializer
-
+public class UpdateChapteQuestionJFrame extends JFrame {
+    //initializer de question
     private JButton returnButton;
 
+    private QuestionComboBox questionComboBox;
     private JComboBox<String> responseType;
     private ChapterComboBox chapterComboBox;
     private JTextField commentField;
     private JTextField questionField;
+    private JButton updateButton;
 
-    public CreateQuestionJFrame() {
+    private boolean initializer;
+    private Question questionToEdit;
+
+    public UpdateChapteQuestionJFrame() {
+        initializer = true;
+
         initComponents();
-        createCreateFrame();
+        createUpdateFrame();
+
+        initializer = false;
     }
 
     private void initComponents() {
+        questionComboBox = new QuestionComboBox(getSelectedQuestion());
         chapterComboBox = new ChapterComboBox();
         responseType = new JComboBox<>();
         responseType.addItem("seleccion");
         responseType.addItem("escrita");
     }
 
-
-    private void createCreateFrame() {
-        setTitle("Create Question");
+    private void createUpdateFrame() {
+        setTitle("Update question");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -67,11 +73,23 @@ public class CreateQuestionJFrame extends JFrame {
         int row = 0;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabel = new JLabel("Chapter");
+        JLabel comboBoxLabel = new JLabel("question");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
+        questionComboBox.updateQuestions();
+        formPanel.add(questionComboBox, gbc);
+
+        row++;
+        gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel comboBoxLabelChapter = new JLabel("Chapter");
+        formPanel.add(comboBoxLabelChapter, gbc);   
+
+        gbc.gridx = 1;
         chapterComboBox.updateChapters();
+        chapterComboBox.switcher(false);
         formPanel.add(chapterComboBox, gbc);
 
         row++;
@@ -82,6 +100,7 @@ public class CreateQuestionJFrame extends JFrame {
         formPanel.add(typeLabel, gbc);
 
         gbc.gridx = 1;
+        responseType.setEditable(false);
         formPanel.add(responseType, gbc);
 
         row++;
@@ -93,6 +112,7 @@ public class CreateQuestionJFrame extends JFrame {
 
         gbc.gridx = 1;
         commentField = StyleDefiner.defineFieldStyle(commentField);
+        commentField.setEditable(false);
         formPanel.add(commentField, gbc);
 
         row++;
@@ -104,23 +124,24 @@ public class CreateQuestionJFrame extends JFrame {
 
         gbc.gridx = 1;
         questionField = StyleDefiner.defineFieldStyle(questionField);
+        questionField.setEditable(false);
         formPanel.add(questionField, gbc);
-     
+
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        JButton createButton = StyleDefiner.defineButtonStyle(new JButton("crear"));
-        createButton.addActionListener(guardarQuestion());
-        formPanel.add(createButton, gbc);
+        updateButton = StyleDefiner.defineButtonStyle(new JButton("actualizar"));
+        updateButton.setEnabled(false);
+        updateButton.addActionListener(actualizarQuestion());
+        formPanel.add(updateButton, gbc);
 
         add(formPanel, BorderLayout.CENTER);
     }
 
-    private ActionListener guardarQuestion() {
+    private ActionListener actualizarQuestion() {
         return new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 String comment = commentField.getText();
@@ -143,21 +164,47 @@ public class CreateQuestionJFrame extends JFrame {
                                                             .toArray();
 
                 Question question = new Question();
-                question.setQuestion(questionText);
-                question.setQuestionNumber(String.valueOf(numeroDeQuestions.size() + 1));
-                question.setIdChapter(chapter.getId());
-                question.setType(type);
-                question.setComment(comment);
+                questionToEdit.setQuestion(questionText);
+                questionToEdit.setQuestionNumber(String.valueOf(numeroDeQuestions.size() + 1));
+                questionToEdit.setIdChapter(chapter.getId());
+                questionToEdit.setType(type);
+                questionToEdit.setComment(comment);
 
                 //initializer
 
-                JOptionPane.showMessageDialog(questionField, "question guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
-            } 
-        };   
+                JOptionPane.showMessageDialog(questionField, "question actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
+            }
+        };
+    }
+
+    private ActionListener getSelectedQuestion() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (!initializer) {
+                    questionToEdit = questionComboBox.getSelectedQuestion();
+                    // logica para obtener el survey de este chapter
+                    commentField.setText(questionToEdit.getQuestionComment());
+                    commentField.setEditable(true);
+
+                    questionField.setText(questionToEdit.getQuestion());
+                    questionField.setEditable(true);
+
+                    responseType.setSelectedItem(questionToEdit.getType());
+                    responseType.setEditable(true);
+
+                    // inicializer de chapter 
+                    chapterComboBox.setSelectedChapter(chapter);
+                    chapterComboBox.switcher(true);
+                    
+                    updateButton.setEnabled(true);
+
+                }
+            }
+        };
     }
 
     public void setReturnActionListener(ActionListener actionListener) {
         returnButton.addActionListener(actionListener);
     }
-
 }
