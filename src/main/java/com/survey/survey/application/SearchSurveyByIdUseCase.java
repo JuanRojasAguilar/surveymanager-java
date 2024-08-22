@@ -5,10 +5,10 @@ import java.util.Optional;
 import com.survey.rol.domain.entity.Rol;
 import com.survey.rol.domain.service.RolService;
 
-public class SearchRolByIdUseCase {
+public class SearchSurveyByIdUseCase {
   private RolService rolService;
 
-  public SearchRolByIdUseCase(RolService rolService) {
+  public SearchSurveyByIdUseCase(RolService rolService) {
     this.rolService = rolService;
   }
 

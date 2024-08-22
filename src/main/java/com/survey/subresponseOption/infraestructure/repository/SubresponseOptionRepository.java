@@ -4,16 +4,15 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
-import com.survey.subresponseOption.domain.entity.SubresponseOptionDTO;
 import com.survey.subresponseOption.domain.service.SubresponseOptionService;
 
 public class SubresponseOptionRepository implements SubresponseOptionService {
@@ -76,7 +75,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
             statement.executeUpdate();
             try (ResultSet response = statement.executeQuery()) {
                 while (response.next()) {
-                    int idSubresponseOption = response.getInt("id_subresponse_option")
+                    int idSubresponseOption = response.getInt("id_subresponse_option");
                         int idResponseOption = response.getInt("id_response_option");
                     String subresponseText = response.getString("subresponse_text");
                     Date createdAt = response.getDate("created_at");
@@ -98,7 +97,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, subresponseOption.getIdResponseOption());
             statement.setString(2, subresponseOption.getSubresponseText());
-            statement.setInt(3, subResponseOption.getId());
+            statement.setInt(3, subresponseOption.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

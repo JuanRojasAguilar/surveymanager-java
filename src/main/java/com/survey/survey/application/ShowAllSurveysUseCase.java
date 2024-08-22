@@ -6,10 +6,10 @@ import java.util.Optional;
 import com.survey.rol.domain.entity.Rol;
 import com.survey.rol.domain.service.RolService;
 
-public class ShowAllRolesUseCase {
+public class ShowAllSurveysUseCase {
   private RolService rolService;
 
-  public ShowAllRolesUseCase(RolService rolService) {
+  public ShowAllSurveysUseCase(RolService rolService) {
     this.rolService = rolService;
   }
 
