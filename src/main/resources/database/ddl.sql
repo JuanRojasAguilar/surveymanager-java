@@ -81,7 +81,6 @@ CREATE TABLE response_options (
     parentresponse_id INT UNSIGNED,
     question_id INT UNSIGNED,
     update_at TIMESTAMP(6),
-    typecomponenthtml VARCHAR(30),
     comment_response TEXT,
     option_text TEXT,
     CONSTRAINT pk_id_response_options PRIMARY KEY (id),
@@ -99,7 +98,6 @@ CREATE TABLE subresponse_options (
     create_at TIMESTAMP(6) DEFAULT (NOW()),
     responseoptions_id INT UNSIGNED,
     update_at TIMESTAMP(6),
-    component_html VARCHAR(255),
     subresponse_text VARCHAR(255),
     CONSTRAINT pk_id_subresponse_options PRIMARY KEY (id),
     CONSTRAINT fk_responseoptions_id_subresponse_options FOREIGN KEY(responseoptions_id)

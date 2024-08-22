@@ -143,11 +143,11 @@ public class CreateQuestionJFrame extends JFrame {
                                                             .toArray();
 
                 Question question = new Question();
-                question.setQuestion(questionText);
+                question.setQuestionText(questionText);
                 question.setQuestionNumber(String.valueOf(numeroDeQuestions.size() + 1));
                 question.setIdChapter(chapter.getId());
-                question.setType(type);
-                question.setComment(comment);
+                question.setResponseType(type);
+                question.setCommentQuestion(comment);
 
                 //initializer
 

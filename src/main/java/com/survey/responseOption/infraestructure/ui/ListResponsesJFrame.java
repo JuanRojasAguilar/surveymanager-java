@@ -1,4 +1,4 @@
-package com.survey.chapter.infraestructure.ui;
+package com.survey.responseOption.infraestructure.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,36 +17,38 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.survey.catalog.infraestructure.ui.CatalogComboBox;
-import com.survey.chapter.domain.entity.Chapter;
+import com.survey.question.domain.entity.Question;
+import com.survey.question.infraestructure.ui.QuestionComboBox;
+import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.responseOption.domain.entity.ResponseOptionDTO;
 
-public class ListChaptersJFrame extends JFrame{
+public class ListResponsesJFrame extends JFrame {
     private DefaultTableModel model;
     private JTable table;
     private JScrollPane scrollPane;
-    private ChapterComboBox chapterComboBox;
+    private ResponseComboBox responseComboBox;
     private JButton returnButton;
 
     private boolean initializer;
 
     //initializer
 
-    public ListChaptersJFrame() {
+    public ListResponsesJFrame() {
         initializer = true;
 
         initComponents();
 
-        createListChapters();
+        createListResponses();
 
         initializer = false;
     }
 
     private void initComponents() {
-        chapterComboBox = new ChapterComboBox(getSelectedChapter());
+        responseComboBox = new ResponseComboBox(getSelectedResponses());
     }
 
-    private void createListChapters() {
-        setTitle("List Chapters");
+    private void createListResponses() {
+        setTitle("List Responses");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -65,12 +67,12 @@ public class ListChaptersJFrame extends JFrame{
         int row = 0;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabel = new JLabel("Chapter");
+        JLabel comboBoxLabel = new JLabel("Response");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
-        chapterComboBox.updateChapters();
-        formPanel.add(chapterComboBox, gbc);
+        responseComboBox.updateResponses();
+        formPanel.add(responseComboBox, gbc);
 
         row++;
         gbc.gridx = 0;
@@ -79,11 +81,12 @@ public class ListChaptersJFrame extends JFrame{
         gbc.weighty = 1;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
-        String[] columnNames = {"id", "idSurvey", "chapterNumber", "chapterTitle", "createdAt", "updateAt"};
+        String[] columnNames = {"id", "categoryCatalog", "parentResponse", "question", "optionText", "createdAt", "updateAt"};
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
-        table.setRowHeight(100);
+        table.setRowHeight(30);
         table.setEnabled(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         int columnWidth = 500 / columnNames.length; 
         for (int i = 0; i < columnNames.length; i++ ) {
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
@@ -92,28 +95,28 @@ public class ListChaptersJFrame extends JFrame{
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 
-        showAllChapters();
+        showAllResponses();
 
         add(formPanel, BorderLayout.CENTER);
     }
 
-    private void showAllChapters() {
+    private void showAllResponses() {
         //list from initializer
 
-        chapters.forEach(chapter -> {
-            Object[] rowData = {chapter.getId(), chapter.getIdSurvey(), chapter.getChapterNumber(), chapter.getChapterTitle(), chapter.getCreatedAt(), chapter.getUpdatedAt()};
+        responses.forEach(response -> {
+            Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreateAt(), response.getUpdateAt()};
             model.addRow(rowData);
         });
     }
 
-    private ActionListener getSelectedChapter() {
+     private ActionListener getSelectedResponses() {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
-                    Chapter chapter = chapterComboBox.getSelectedChapter();
+                    ResponseOption response = responseComboBox.getSelectedResponse();
                     model.setRowCount(0);
-                    Object[] rowData = {chapter.getId(), chapter.getIdSurvey(), chapter.getChapterNumber(), chapter.getChapterTitle(), chapter.getCreatedAt(), chapter.getUpdatedAt()};
+                    Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreateAt(), response.getUpdateAt()};
                     model.addRow(rowData);
                 }
             }

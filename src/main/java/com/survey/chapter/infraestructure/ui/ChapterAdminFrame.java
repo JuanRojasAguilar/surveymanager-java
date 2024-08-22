@@ -13,15 +13,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.survey.catalog.infraestructure.ui.CreateCatalogJFrame;
-import com.survey.catalog.infraestructure.ui.DeleteCatalogJFrame;
-import com.survey.catalog.infraestructure.ui.ListCatalogsJFrame;
-import com.survey.catalog.infraestructure.ui.UpdateCatalogJFrame;
 
-public class ChapterAdminButton extends JFrame {
+public class ChapterAdminFrame extends JFrame {
     private JButton returnButton;
 
-    public ChapterAdminButton() {
+    public ChapterAdminFrame() {
         createChapterFrame();
     }
 

@@ -22,7 +22,7 @@ import com.survey.chapter.infraestructure.ui.ChapterComboBox;
 import com.survey.question.domain.entity.Question;
 import com.survey.ui.StyleDefiner;
 
-public class UpdateChapteQuestionJFrame extends JFrame {
+public class UpdateQuestionJFrame extends JFrame {
     //initializer de question
     private JButton returnButton;
 
@@ -36,7 +36,7 @@ public class UpdateChapteQuestionJFrame extends JFrame {
     private boolean initializer;
     private Question questionToEdit;
 
-    public UpdateChapteQuestionJFrame() {
+    public UpdateQuestionJFrame() {
         initializer = true;
 
         initComponents();
@@ -164,11 +164,11 @@ public class UpdateChapteQuestionJFrame extends JFrame {
                                                             .toArray();
 
                 Question question = new Question();
-                questionToEdit.setQuestion(questionText);
+                questionToEdit.setQuestionText(questionText);
                 questionToEdit.setQuestionNumber(String.valueOf(numeroDeQuestions.size() + 1));
                 questionToEdit.setIdChapter(chapter.getId());
-                questionToEdit.setType(type);
-                questionToEdit.setComment(comment);
+                questionToEdit.setResponseType(type);
+                questionToEdit.setCommentQuestion(comment);
 
                 //initializer
 
@@ -183,14 +183,14 @@ public class UpdateChapteQuestionJFrame extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
                     questionToEdit = questionComboBox.getSelectedQuestion();
-                    // logica para obtener el survey de este chapter
-                    commentField.setText(questionToEdit.getQuestionComment());
+                    
+                    commentField.setText(questionToEdit.getCommentQuestion());
                     commentField.setEditable(true);
 
-                    questionField.setText(questionToEdit.getQuestion());
+                    questionField.setText(questionToEdit.getQuestionText());
                     questionField.setEditable(true);
 
-                    responseType.setSelectedItem(questionToEdit.getType());
+                    responseType.setSelectedItem(questionToEdit.getResponseType());
                     responseType.setEditable(true);
 
                     // inicializer de chapter 

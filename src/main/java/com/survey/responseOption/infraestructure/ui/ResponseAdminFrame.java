@@ -1,4 +1,4 @@
-package com.survey.question.infraestructure.ui;
+package com.survey.responseOption.infraestructure.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,15 +13,20 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class QuestionAdminFrame extends JFrame {
+import com.survey.question.infraestructure.ui.CreateQuestionJFrame;
+import com.survey.question.infraestructure.ui.DeleteQuestionJFrame;
+import com.survey.question.infraestructure.ui.ListQuestionsJFrame;
+import com.survey.question.infraestructure.ui.UpdateQuestionJFrame;
+
+public class ResponseAdminFrame extends JFrame {
     private JButton returnButton;
 
-    public QuestionAdminFrame() {
-        createQuestionFrame();
+    public ResponseAdminFrame() {
+        createResponseFrame();
     }
 
-    private void createQuestionFrame() {
-        setTitle("QuestionFrame");
+    private void createResponseFrame() {
+        setTitle("ResponseFrame");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -43,11 +48,11 @@ public class QuestionAdminFrame extends JFrame {
         JButton createButton = new JButton("createManager");
         createButton.setPreferredSize(new Dimension(175, 75));
         createButton.addActionListener(e -> {
-            CreateQuestionJFrame createQuestionJFrame = new CreateQuestionJFrame();
-            createQuestionJFrame.setReturnActionListener(returnSetVisibleFunction(createQuestionJFrame));
-            createQuestionJFrame.setLocationRelativeTo(buttonsPanel);
+            CreateResponseJFrame createResponseJFrame = new CreateResponseJFrame();
+            createResponseJFrame.setReturnActionListener(returnSetVisibleFunction(createResponseJFrame));
+            createResponseJFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            createQuestionJFrame.setVisible(true);
+            createResponseJFrame.setVisible(true);
         });
         buttonsPanel.add(createButton, gbc);
 
@@ -55,11 +60,11 @@ public class QuestionAdminFrame extends JFrame {
         JButton deleteButton = new JButton("deleteManager");
         deleteButton.setPreferredSize(new Dimension(175, 75));
         deleteButton.addActionListener(e -> {
-            DeleteQuestionJFrame deleteQuestionJframe = new DeleteQuestionJFrame();
-            deleteQuestionJframe.setReturnActionListener(returnSetVisibleFunction(deleteQuestionJframe));
-            deleteQuestionJframe.setLocationRelativeTo(buttonsPanel);
+            DeleteResponseJFrame deleteResponseJframe = new DeleteResponseJFrame();
+            deleteResponseJframe.setReturnActionListener(returnSetVisibleFunction(deleteResponseJframe));
+            deleteResponseJframe.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            deleteQuestionJframe.setVisible(true);
+            deleteResponseJframe.setVisible(true);
         });
         buttonsPanel.add(deleteButton, gbc);
 
@@ -69,11 +74,11 @@ public class QuestionAdminFrame extends JFrame {
         JButton updateButton = new JButton("updateManager");
         updateButton.setPreferredSize(new Dimension(175, 75));
         updateButton.addActionListener(e -> {
-            UpdateQuestionJFrame updateQuestionJFrame = new UpdateQuestionJFrame();
-            updateQuestionJFrame.setReturnActionListener(returnSetVisibleFunction(updateQuestionJFrame));
-            updateQuestionJFrame.setLocationRelativeTo(buttonsPanel);
+            UpdateResponseJFrame updateResponseJFrame = new UpdateResponseJFrame();
+            updateResponseJFrame.setReturnActionListener(returnSetVisibleFunction(updateResponseJFrame));
+            updateResponseJFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            updateQuestionJFrame.setVisible(true);
+            updateResponseJFrame.setVisible(true);
             
         });
         buttonsPanel.add(updateButton, gbc);
@@ -82,11 +87,11 @@ public class QuestionAdminFrame extends JFrame {
         JButton listButton = new JButton("listManager");
         listButton.setPreferredSize(new Dimension(175, 75));
         listButton.addActionListener(e -> {
-            ListQuestionsJFrame listQuestionsJFrame = new ListQuestionsJFrame();
-            listQuestionsJFrame.setReturnActionListener(returnSetVisibleFunction(listQuestionsJFrame));
-            listQuestionsJFrame.setLocationRelativeTo(buttonsPanel);
+            ListResponsesJFrame listResponsesJFrame = new ListResponsesJFrame();
+            listResponsesJFrame.setReturnActionListener(returnSetVisibleFunction(listResponsesJFrame));
+            listResponsesJFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            listQuestionsJFrame.setVisible(true);
+            listResponsesJFrame.setVisible(true);
         });
         buttonsPanel.add(listButton, gbc);
 
