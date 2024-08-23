@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -16,21 +17,31 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.chapter.application.ShowAllChaptersUseCase;
+import com.survey.chapter.application.UpdateChapterUseCase;
 import com.survey.chapter.domain.entity.Chapter;
+import com.survey.chapter.domain.service.ChapterService;
+import com.survey.rol.application.SearchSurveyByIdUseCase;
+import com.survey.survey.domain.entity.Survey;
 import com.survey.survey.infraestructure.ui.SurveyComboBox;
 import com.survey.ui.StyleDefiner;
 
-public class UpdateChapterJFrame extends JFrame{
-        private JButton returnButton;
+public class UpdateChapterJFrame extends JFrame {
+    private JButton returnButton;
 
-        private ChapterComboBox chapterComboBox;
-        private JTextField titleField;
-        private SurveyComboBox surveyComboBox;
-        private JButton updateButton;
+    private ChapterComboBox chapterComboBox;
+    private JTextField titleField;
+    private SurveyComboBox surveyComboBox;
+    private JButton updateButton;
+    private ShowAllChaptersUseCase showAllChaptersUseCase;
+    private UpdateChapterUseCase updateChapterUseCase;
+    private ChapterService chapterService;
+    private SearchSurveyByIdUseCase searchSurveyByIdUseCase;
+    private SurveyService surveyService;
 
-        private boolean initializer;
+    private boolean initializer;
 
-        private Chapter chapterToEdit;
+    private Chapter chapterToEdit;
 
     public UpdateChapterJFrame() {
         initializer = true;
@@ -59,7 +70,7 @@ public class UpdateChapterJFrame extends JFrame{
         returnButton = new JButton("<--");
         topPanel.add(returnButton);
         add(topPanel, BorderLayout.NORTH);
-  
+
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -114,28 +125,37 @@ public class UpdateChapterJFrame extends JFrame{
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                    String title = titleField.getText();
-                    Survey survey = surveyComboBox.getSelectedSurvey();
+                showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
+                updateChapterUseCase = new UpdateChapterUseCase(chapterService);
 
-                    if (title.isEmpty()) {
-                        JOptionPane.showMessageDialog(titleField, "campos incompletos", "erroe", JOptionPane.WARNING_MESSAGE);
-                        return;
+                String title = titleField.getText();
+                Survey survey = surveyComboBox.getSelectedSurvey();
+
+                if (title.isEmpty()) {
+                    JOptionPane.showMessageDialog(titleField, "campos incompletos", "erroe",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                titleField.setText("");
+
+                List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
+
+                List<Integer> numeroDeChapters = new ArrayList<>();
+
+                chapters.forEach(capitulo -> {
+                    if (capitulo.getId() == survey.getId()) {
+                        numeroDeChapters.add(capitulo.getId());
                     }
+                });
 
-                    titleField.setText("");
+                chapterToEdit.setChapterTitle(title);
+                chapterToEdit.setIdSurvey(survey.getId());
 
-                    // initializer trae todos los chapters
+                updateChapterUseCase.execute(chapterToEdit);
 
-                    List<Chapter> numeroDeChapters = chapters.stream()
-                                                            .filter(chapter.getIdSurvey() == survey.getId())
-                                                            .toArray();
-
-                    chapterToEdit.setChapterTitle(title);
-                    chapterToEdit.setIdSurvey(survey.getId());
-
-                    //initializer
-
-                    JOptionPane.showMessageDialog(titleField, "chapter actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(titleField, "chapter actualizado", "accion completada",
+                        JOptionPane.WARNING_MESSAGE);
             }
         };
     }
@@ -144,9 +164,11 @@ public class UpdateChapterJFrame extends JFrame{
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                searchSurveyByIdUseCase = new SearchSurveyByIdUseCase(surveyService);
+
                 if (!initializer) {
                     chapterToEdit = chapterComboBox.getSelectedChapter();
-                    // logica para obtener el survey de este chapter
+                    Survey survey = searchSurveyByIdUseCase.execute(chapterToEdit.getIdSurvey());
                     titleField.setText(chapterToEdit.getChapterTitle());
                     titleField.setEditable(true);
                     surveyComboBox.setSelectedSurvey(survey);
