@@ -7,11 +7,14 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.survey.chapter.domain.entity.Chapter;
+import com.survey.question.application.ShowAllQuestionsUseCase;
 import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
 
 public class QuestionComboBox extends JPanel {
     private JComboBox<Question> questionComboBox;
+    private ShowAllQuestionsUseCase showAllQuestionsUseCase;
+    private QuestionService questionService;
     
     public QuestionComboBox() {
         questionComboBox = new JComboBox<>();
@@ -31,7 +34,8 @@ public class QuestionComboBox extends JPanel {
     }
 
     public void updateQuestions() {
-        List<Question> questions = //InitializerChapter 
+        showAllQuestionsUseCase = new ShowAllQuestionsUseCase(questionService);
+        List<Question> questions = showAllQuestionsUseCase.execute(10, 0).get();
         questionComboBox.removeAllItems();
         questions.forEach(question -> {
             questionComboBox.addItem(question);

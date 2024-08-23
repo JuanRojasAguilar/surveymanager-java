@@ -21,8 +21,9 @@ import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.application.UpdateChapterUseCase;
 import com.survey.chapter.domain.entity.Chapter;
 import com.survey.chapter.domain.service.ChapterService;
-import com.survey.rol.application.SearchSurveyByIdUseCase;
+import com.survey.survey.application.SearchSurveyByIdUseCase;
 import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
 import com.survey.survey.infraestructure.ui.SurveyComboBox;
 import com.survey.ui.StyleDefiner;
 
@@ -168,7 +169,7 @@ public class UpdateChapterJFrame extends JFrame {
 
                 if (!initializer) {
                     chapterToEdit = chapterComboBox.getSelectedChapter();
-                    Survey survey = searchSurveyByIdUseCase.execute(chapterToEdit.getIdSurvey());
+                    Survey survey = searchSurveyByIdUseCase.execute(chapterToEdit.getIdSurvey()).get();
                     titleField.setText(chapterToEdit.getChapterTitle());
                     titleField.setEditable(true);
                     surveyComboBox.setSelectedSurvey(survey);
