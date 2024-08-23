@@ -1,16 +1,16 @@
-package com.survey.rol.application;
+package com.survey.survey.application;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
 
 public class UpdateSurveyUseCase {
-  private RolService rolService;
+  private SurveyService surveyService;
 
-  public UpdateSurveyUseCase(RolService rolService) {
-    this.rolService = rolService;
+  public UpdateSurveyUseCase(SurveyService surveyService) {
+    this.surveyService = surveyService;
   }
 
-  public void execute(Rol rol) {
-    this.rolService.update(rol);
+  public void execute(Survey survey) {
+    this.surveyService.update(survey);
   }
 }

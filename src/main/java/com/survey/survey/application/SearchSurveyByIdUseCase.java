@@ -1,18 +1,18 @@
-package com.survey.rol.application;
+package com.survey.survey.application;
 
 import java.util.Optional;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
 
 public class SearchSurveyByIdUseCase {
-  private RolService rolService;
+  private SurveyService surveyService;
 
-  public SearchSurveyByIdUseCase(RolService rolService) {
-    this.rolService = rolService;
+  public SearchSurveyByIdUseCase(SurveyService surveyService) {
+    this.surveyService = surveyService;
   }
 
-  public Optional<Rol> execute(int id) {
-    return this.rolService.searchById(id);
+  public Optional<Survey> execute(int id) {
+    return this.surveyService.searchById(id);
   }
 }
