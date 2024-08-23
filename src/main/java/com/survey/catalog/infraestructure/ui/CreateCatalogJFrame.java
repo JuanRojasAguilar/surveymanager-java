@@ -15,11 +15,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.catalog.application.AddCatalogUseCase;
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
 import com.survey.ui.StyleDefiner;
 
 public class CreateCatalogJFrame extends JFrame{
-    //catalog initializer
+    private CatalogService catalogService;
+    private AddCatalogUseCase addCatalogUseCase;
 
     private JButton returnButton;
 
@@ -73,6 +76,7 @@ public class CreateCatalogJFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                addCatalogUseCase = new AddCatalogUseCase(catalogService);
                 String nombre = nombreField.getText();
 
                 if (nombre.isEmpty()) {
@@ -84,7 +88,7 @@ public class CreateCatalogJFrame extends JFrame{
 
                 Catalog catalog = new Catalog(nombre);
 
-                //initializer
+                addCatalogUseCase.execute(catalog);
 
                 JOptionPane.showMessageDialog(nombreField, "usuario guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }

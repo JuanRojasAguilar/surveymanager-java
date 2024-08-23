@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,7 +18,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import com.survey.catalog.application.ShowAllCatalogsUseCase;
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
 import com.survey.survey.infraestructure.ui.SurveyComboBox;
 
 public class ListCatalogsJFrame extends JFrame{
@@ -26,6 +29,8 @@ public class ListCatalogsJFrame extends JFrame{
     private JScrollPane scrollPane;
     private CatalogComboBox catalogComboBox;
     private JButton returnButton;
+    private CatalogService catalogService;
+    private ShowAllCatalogsUseCase showAllCatalogsUseCase;
 
     private boolean initializer;
 
@@ -99,8 +104,7 @@ public class ListCatalogsJFrame extends JFrame{
     }
 
     private void showAllCatalogs() {
-        // list from initializer
-
+        List<Catalog> catalogs = new ShowAllCatalogsUseCase(catalogService).execute(10, 0).get();
         catalogs.forEach(catalog -> {
             Object[] rowData = {catalog.getId(), catalog.getName(), catalog.getCreatedAt(), catalog.getUpdatedAt()};
             model.addRow(rowData);

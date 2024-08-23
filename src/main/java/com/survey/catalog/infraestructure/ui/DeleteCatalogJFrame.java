@@ -13,12 +13,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.survey.catalog.application.DeleteCatalogUseCase;
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
 import com.survey.ui.StyleDefiner;
 
 public class DeleteCatalogJFrame extends JFrame{
     private CatalogComboBox catalogComboBox;
     private JButton returnButton;
+    private CatalogService catalogService;
+    private DeleteCatalogUseCase deleteCatalogUseCase;
 
     //initializer
 
@@ -71,8 +75,10 @@ public class DeleteCatalogJFrame extends JFrame{
             int continuar = JOptionPane.showConfirmDialog(catalogComboBox, "seguro que quieres eliminar a este usuario?", "¿?", JOptionPane.YES_NO_OPTION);
 
             if (continuar == 0) {
-                // initializer del delete
-                JOptionPane.showMessageDialog(null, "eliminado correctamente", "eliminado", JOptionPane.INFORMATION_MESSAGE);
+                deleteCatalogUseCase = new DeleteCatalogUseCase(catalogService);
+                boolean hasBeenDeleted = deleteCatalogUseCase.execute(catalog.getId());
+                String mensaje = hasBeenDeleted ? "eliminado correctamente" : "No hemos podido eliminarlo, intenta de nuevo";
+                JOptionPane.showMessageDialog(null, mensaje, "eliminado", JOptionPane.INFORMATION_MESSAGE);
                 catalogComboBox.updateCatalogs();
             }
         });
