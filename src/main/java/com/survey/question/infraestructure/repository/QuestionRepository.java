@@ -32,13 +32,14 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public void add(Question question) {
-    String sql = "INSERT INTO questions (question_number, response_type, comment_question, question_text) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO questions (id_chapter, question_number, response_type, comment_question, question_text) VALUES (?, ?, ?, ?, ?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, question.getQuestionNumber());
-      statement.setString(2, question.getResponseType());
-      statement.setString(3, question.getCommentQuestion());
-      statement.setString(4, question.getQuestionText());
+      statement.setInt(1, question.getIdChapter());
+      statement.setString(2, question.getQuestionNumber());
+      statement.setString(3, question.getResponseType());
+      statement.setString(4, question.getCommentQuestion());
+      statement.setString(5, question.getQuestionText());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -47,18 +48,19 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public Optional<Question> searchById(int id) {
-    String sql = "SELECT question_number, response_type, comment_question, question_text FROM questions WHERE id = ?";
+    String sql = "SELECT id_chapter, question_number, response_type, comment_question, question_text FROM questions WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
+          int idChapter = response.getInt("id_chapter");
           String questionNumber = response.getString("question_number");
           String responseType = response.getString("response_type");
           String commentQuestion = response.getString("comment_question");
           String questionText = response.getString("question_text");
-          return Optional.of(new Question(id, questionNumber, responseType, commentQuestion, questionText));
+          return Optional.of(new Question(id, idChapter, questionNumber, responseType, commentQuestion, questionText));
         }
       }
     } catch (SQLException e) {
@@ -75,13 +77,14 @@ public class QuestionRepository implements QuestionService {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
-        if (response.next()) {
-          int questionId = response.getInt("id_question");
+        while (response.next()) {
+          int idQuestion = response.getInt("id_question");
+          int idChapter = response.getInt("id_chapter");
           String questionNumber = response.getString("question_number");
           String responseType = response.getString("response_type");
           String commentQuestion = response.getString("comment_question");
           String questionText = response.getString("question_text");
-          questions.add(new Question(questionId, questionNumber, responseType, commentQuestion, questionText));
+          questions.add(new Question(idQuestion, idChapter, questionNumber, responseType, commentQuestion, questionText));
         }
         return Optional.of(questions);
       }
@@ -93,13 +96,14 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public void update(Question question) {
-    String sql = "UPDATE TABLE questiones SET question_number = ?, response_type = ?, comment_question = ?, question_text = ? WHERE id = ?";
+    String sql = "UPDATE TABLE questions SET id_chapter = ?, question_number = ?, response_type = ?, comment_question = ?, question_text = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, question.getQuestionNumber());
-      statement.setString(2, question.getResponseType());
-      statement.setString(3, question.getCommentQuestion());
-      statement.setString(4, question.getQuestionText());
+      statement.setInt(1, question.getIdChapter());
+      statement.setString(2, question.getQuestionNumber());
+      statement.setString(3, question.getResponseType());
+      statement.setString(4, question.getCommentQuestion());
+      statement.setString(5, question.getQuestionText());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
