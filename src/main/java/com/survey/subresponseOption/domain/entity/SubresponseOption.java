@@ -4,16 +4,16 @@ import java.util.Date;
 
 public class SubresponseOption {
     private int id;
-    private int idResponseOptions;
+    private int idResponseOption;
     private String subresponseText;
     private Date createdAt;
     private Date updatedAt;
 
     public SubresponseOption() {}
 
-    public SubresponseOption(int id, int idResponseOptions, String subresponseText, Date createdAt, Date updatedAt) {
+    public SubresponseOption(int id, int idResponseOption, String subresponseText, Date createdAt, Date updatedAt) {
         this.setId(id);
-        this.setIdResponseOptions(idResponseOptions);
+        this.setIdResponseOption(idResponseOption);
         this.setSubresponseText(subresponseText);
         this.setCreatedAt(createdAt);
         this.setUpdatedAt(updatedAt);
@@ -44,12 +44,12 @@ public class SubresponseOption {
         return this.updatedAt;
     }
 
-    public int getIdResponseOptions() {
-        return idResponseOptions;
+    public int getIdResponseOption() {
+        return idResponseOption;
     }
 
-    public void setIdResponseOptions(int idResponseOptions) {
-        this.idResponseOptions = idResponseOptions;
+    public void setIdResponseOption(int idResponseOption) {
+        this.idResponseOption = idResponseOption;
     }
 
     public String getSubresponseText() {
