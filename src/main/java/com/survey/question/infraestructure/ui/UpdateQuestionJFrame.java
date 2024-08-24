@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.GridBagLayout;
 
@@ -17,15 +18,24 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.chapter.application.SearchChapterByIdUseCase;
 import com.survey.chapter.domain.entity.Chapter;
+import com.survey.chapter.domain.service.ChapterService;
 import com.survey.chapter.infraestructure.ui.ChapterComboBox;
+import com.survey.question.application.ShowAllQuestionsUseCase;
+import com.survey.question.application.UpdateQuestionUseCase;
 import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
 import com.survey.ui.StyleDefiner;
 
 public class UpdateQuestionJFrame extends JFrame {
-    //initializer de question
-    private JButton returnButton;
+    private QuestionService questionService;
+    private ShowAllQuestionsUseCase showAllQuestionsUseCase;
+    private UpdateQuestionUseCase updateQuestionUseCase;
+    private ChapterService chapterService;
+    private SearchChapterByIdUseCase searchChapterByIdUseCase;
 
+    private JButton returnButton;
     private QuestionComboBox questionComboBox;
     private JComboBox<String> responseType;
     private ChapterComboBox chapterComboBox;
@@ -144,6 +154,9 @@ public class UpdateQuestionJFrame extends JFrame {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                showAllQuestionsUseCase = new ShowAllQuestionsUseCase(questionService);
+                updateQuestionUseCase = new UpdateQuestionUseCase(questionService);
+
                 String comment = commentField.getText();
                 String questionText = questionField.getText();
                 String type = (String) responseType.getSelectedItem();
@@ -157,20 +170,23 @@ public class UpdateQuestionJFrame extends JFrame {
                 commentField.setText("");
                 questionField.setText("");
 
-                // initializer trae todos los questions
+                List<Question> questions = showAllQuestionsUseCase.execute(10, 0).get();
 
-                List<Question> numeroDeQuestions = questions.stream()
-                                                            .filter(question.getIdChapter == chapter.getId())
-                                                            .toArray();
+                List<Integer> numeroDeQuestions = new ArrayList<>();
+                
+                questions.forEach(question -> {
+                    if (question.getIdChapter() == chapter.getId()) {
+                        numeroDeQuestions.add(question.getId());
+                    }
+                });
 
-                Question question = new Question();
                 questionToEdit.setQuestionText(questionText);
                 questionToEdit.setQuestionNumber(String.valueOf(numeroDeQuestions.size() + 1));
                 questionToEdit.setIdChapter(chapter.getId());
                 questionToEdit.setResponseType(type);
                 questionToEdit.setCommentQuestion(comment);
 
-                //initializer
+                updateQuestionUseCase.execute(questionToEdit);
 
                 JOptionPane.showMessageDialog(questionField, "question actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }
@@ -181,6 +197,7 @@ public class UpdateQuestionJFrame extends JFrame {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                searchChapterByIdUseCase = new SearchChapterByIdUseCase(chapterService);
                 if (!initializer) {
                     questionToEdit = questionComboBox.getSelectedQuestion();
                     
@@ -193,7 +210,7 @@ public class UpdateQuestionJFrame extends JFrame {
                     responseType.setSelectedItem(questionToEdit.getResponseType());
                     responseType.setEditable(true);
 
-                    // inicializer de chapter 
+                    Chapter chapter = searchChapterByIdUseCase.execute(questionToEdit.getIdChapter()).get();
                     chapterComboBox.setSelectedChapter(chapter);
                     chapterComboBox.switcher(true);
                     

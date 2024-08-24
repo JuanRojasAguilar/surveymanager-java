@@ -8,10 +8,14 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.domain.entity.Chapter;
+import com.survey.chapter.domain.service.ChapterService;
 
 public class ChapterComboBox extends JPanel {
     private JComboBox<Chapter> chapterComboBox;
+    private ShowAllChaptersUseCase showAllChaptersUseCase;
+    private ChapterService chapterService;
 
     public ChapterComboBox() {
         chapterComboBox = new JComboBox<>();
@@ -31,7 +35,8 @@ public class ChapterComboBox extends JPanel {
     }
 
     public void updateChapters() {
-        List<Chapter> chapters = //InitializerChapter 
+        showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
+        List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
         chapterComboBox.removeAllItems();
         chapters.forEach(chapter -> {
             chapterComboBox.addItem(chapter);

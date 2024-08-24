@@ -1,4 +1,4 @@
-package com.survey.catalog.infraestructure.repository;
+package com.survey.survey.infraestructure.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
-import com.survey.catalog.domain.entity.Catalog;
-import com.survey.catalog.domain.service.CatalogService;
+import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
 
-public class CatalogRepository implements CatalogService {
+public class SurveyRepository implements SurveyService {
   private Connection connection;
 
-  public CatalogRepository() {
+  public SurveyRepository() {
     try {
       Properties props = new Properties();
       props.load(getClass().getClassLoader().getResourceAsStream("db.properties"));
@@ -32,11 +32,12 @@ public class CatalogRepository implements CatalogService {
   }
 
   @Override
-  public void add(Catalog catalog) {
-    String sql = "INSERT INTO catalogs (name, created_at) VALUES (?, (CURDATE()))";
+  public void add(Survey survey) {
+    String sql = "INSERT INTO surveys (name, description) VALUES (?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, catalog.getName());
+      statement.setString(1, survey.getName());
+      statement.setString(2, survey.getDescription());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -44,19 +45,19 @@ public class CatalogRepository implements CatalogService {
   }
 
   @Override
-  public Optional<Catalog> searchById(int id) {
-    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs WHERE id = ?";
+  public Optional<Survey> searchById(int id) {
+    String sql = "SELECT name, description, created_at, updated_at FROM surveys WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
-          int idCatalog = response.getInt("id_catalog");
           String name = response.getString("name");
+          String description = response.getString("description");
           Date createdAt = response.getDate("created_at");
           Date updatedAt = response.getDate("updated_at");
-          return Optional.of(new Catalog(idCatalog, name, createdAt, updatedAt));
+          return Optional.of(new Survey(id, name, description, createdAt, updatedAt));
         }
       }
     } catch (SQLException e) {
@@ -66,36 +67,37 @@ public class CatalogRepository implements CatalogService {
   }
 
   @Override
-  public Optional<List<Catalog>> showAll(int limit, int offset) {
-    List<Catalog> catalogs = new ArrayList<>();
-    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs LIMIT ?, ?";
+  public Optional<List<Survey>> showAll() {
+    String sql = "SELECT id_survey, name, description, created_at, updated_at FROM surveys";
+    List<Survey> surveys = new ArrayList<>();
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setInt(1, limit);
-      statement.setInt(2, offset);
+      statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
-        while (response.next()) {
-          int idCatalog = response.getInt("id_catalog");
+        if (response.next()) {
+          int id = response.getInt("id_survey");
           String name = response.getString("name");
+          String description = response.getString("description");
           Date createdAt = response.getDate("created_at");
           Date updatedAt = response.getDate("updated_at");
-          catalogs.add(new Catalog(idCatalog, name, createdAt, updatedAt));
+          surveys.add(new Survey(id, name, description, createdAt, updatedAt));
         }
-        return Optional.of(catalogs);
+        return Optional.of(surveys);
       }
     } catch (SQLException e) {
       e.printStackTrace();
-      return Optional.empty();
     }
+    return Optional.empty();
   }
 
   @Override
-  public void update(Catalog catalog) {
-    String sql = "UPDATE TABLE catalogs SET name = ? WHERE id = ?";
+  public void update(Survey survey) {
+    String sql = "UPDATE TABLE surveys SET name = ?, description = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.setString(1, catalog.getName());
-      statement.setInt(2, catalog.getId());
+      statement.setString(1, survey.getName());
+      statement.setString(2, survey.getDescription());
+      statement.setInt(3, survey.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -104,7 +106,7 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public boolean delete(int id) {
-    String sql = "DELETE FROM catalogs WHERE id = ?";
+    String sql = "DELETE FROM surveys WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);

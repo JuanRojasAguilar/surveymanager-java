@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,8 +18,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.survey.catalog.infraestructure.ui.CatalogComboBox;
+import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.domain.entity.Chapter;
+import com.survey.chapter.domain.service.ChapterService;
 
 public class ListChaptersJFrame extends JFrame{
     private DefaultTableModel model;
@@ -26,6 +28,8 @@ public class ListChaptersJFrame extends JFrame{
     private JScrollPane scrollPane;
     private ChapterComboBox chapterComboBox;
     private JButton returnButton;
+    private ShowAllChaptersUseCase showAllChaptersUseCase;
+    private ChapterService chapterService;
 
     private boolean initializer;
 
@@ -98,7 +102,8 @@ public class ListChaptersJFrame extends JFrame{
     }
 
     private void showAllChapters() {
-        //list from initializer
+        showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
+        List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
 
         chapters.forEach(chapter -> {
             Object[] rowData = {chapter.getId(), chapter.getIdSurvey(), chapter.getChapterNumber(), chapter.getChapterTitle(), chapter.getCreatedAt(), chapter.getUpdatedAt()};

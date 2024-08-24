@@ -1,19 +1,19 @@
-package com.survey.rol.application;
+package com.survey.survey.application;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.survey.rol.domain.entity.Rol;
-import com.survey.rol.domain.service.RolService;
+import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
 
 public class ShowAllSurveysUseCase {
-  private RolService rolService;
+  private SurveyService surveyService;
 
-  public ShowAllSurveysUseCase(RolService rolService) {
-    this.rolService = rolService;
+  public ShowAllSurveysUseCase(SurveyService surveyService) {
+    this.surveyService = surveyService;
   }
 
-  public Optional<List<Rol>> execute() {
-    return this.rolService.showAll();
+  public Optional<List<Survey>> execute() {
+    return this.surveyService.showAll();
   }
 }

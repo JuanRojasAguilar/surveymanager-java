@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -16,13 +17,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.survey.domain.entity.Survey;
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.chapter.application.AddChapterUseCase;
+import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.domain.entity.Chapter;
+import com.survey.chapter.domain.service.ChapterService;
 import com.survey.survey.infraestructure.ui.SurveyComboBox;
 import com.survey.ui.StyleDefiner;
 
 public class CreateChapterJFrame extends JFrame{
-    //initializer
+    private ChapterService chapterService;
+    private AddChapterUseCase addChapterUseCase;
+    private ShowAllChaptersUseCase showAllChaptersUseCase;
 
     private JButton returnButton;
 
@@ -93,6 +100,9 @@ public class CreateChapterJFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                addChapterUseCase = new AddChapterUseCase(chapterService);
+                showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
+
                 String title = titleField.getText();
                 Survey survey = surveyComboBox.getSelectedSurvey();
 
@@ -103,19 +113,22 @@ public class CreateChapterJFrame extends JFrame{
 
                 titleField.setText("");
 
-                // initializer trae todos los chapters
+                List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
 
-                List<Chapter> numeroDeChapters = chapters.stream()
-                                                         .filter(chapter.getIdSurvey() == survey.getId())
-                                                         .toArray();
+                List<Integer> numeroDeChapters = new ArrayList<>();
+                
+                chapters.forEach(capitulo -> {
+                    if (capitulo.getId() == survey.getId()) {
+                        numeroDeChapters.add(capitulo.getId());
+                    }
+                });
 
                 Chapter chapter = new Chapter();
                 chapter.setChapterTitle(title);
                 chapter.setChapterNumber(String.valueOf(numeroDeChapters.size() + 1));
                 chapter.setIdSurvey(survey.getId());
 
-                //initializer
-
+                addChapterUseCase.execute(chapter);
                 JOptionPane.showMessageDialog(titleField, "chapter guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }
             

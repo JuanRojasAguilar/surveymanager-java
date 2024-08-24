@@ -20,6 +20,13 @@
         <artifactId>mysql-connector-j</artifactId>
         <version>8.3.0</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+<dependency>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>3.4.0</version>
+</dependency>
+
     </dependencies>
 
   <build>
@@ -46,6 +53,7 @@
         </execution>
       </executions>
     </plugin>
+    
   </plugins>
 </build>
 </project>
