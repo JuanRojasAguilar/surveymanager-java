@@ -24,13 +24,14 @@ import com.survey.question.application.AddQuestionUseCase;
 import com.survey.question.application.ShowAllQuestionsUseCase;
 import com.survey.question.domain.entity.Question;
 import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class CreateQuestionJFrame extends JFrame {
     // catalog initializer
     private AddQuestionUseCase addQuestionUseCase;
     private ShowAllQuestionsUseCase showAllQuestionsUseCase;
-    private QuestionService questionService;
+    private QuestionService questionService = new QuestionRepository();
 
     private JButton returnButton;
 
@@ -47,6 +48,7 @@ public class CreateQuestionJFrame extends JFrame {
     private void initComponents() {
         chapterComboBox = new ChapterComboBox();
         responseType = new JComboBox<>();
+        responseType.addItem("seleccion multiple");
         responseType.addItem("seleccion");
         responseType.addItem("escrita");
     }
@@ -70,6 +72,7 @@ public class CreateQuestionJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Chapter");
         formPanel.add(comboBoxLabel, gbc);
@@ -96,7 +99,7 @@ public class CreateQuestionJFrame extends JFrame {
         formPanel.add(commentLabel, gbc);
 
         gbc.gridx = 1;
-        commentField = StyleDefiner.defineFieldStyle(commentField);
+        commentField = StyleDefiner.defineFieldStyle(new JTextField(20));
         formPanel.add(commentField, gbc);
 
         row++;
@@ -107,7 +110,7 @@ public class CreateQuestionJFrame extends JFrame {
         formPanel.add(questionLabel, gbc);
 
         gbc.gridx = 1;
-        questionField = StyleDefiner.defineFieldStyle(questionField);
+        questionField = StyleDefiner.defineFieldStyle(new JTextField(20));
         formPanel.add(questionField, gbc);
 
         row++;
@@ -144,7 +147,6 @@ public class CreateQuestionJFrame extends JFrame {
                 commentField.setText("");
                 questionField.setText("");
 
-                // initializer trae todos los questions
                 List<Question> questions = showAllQuestionsUseCase.execute(10, 0).get();
                 List<Integer> questionNumber = new ArrayList<>();
 

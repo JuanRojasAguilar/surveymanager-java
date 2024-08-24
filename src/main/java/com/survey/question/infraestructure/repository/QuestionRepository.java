@@ -2,6 +2,7 @@ package com.survey.question.infraestructure.repository;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -32,7 +33,7 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public void add(Question question) {
-    String sql = "INSERT INTO questions (id_chapter, question_number, response_type, comment_question, question_text) VALUES (?, ?, ?, ?, ?)";
+    String sql = "INSERT INTO questions (chapter_id, question_number, response_type, comment_question, question_text) VALUES (?, ?, ?, ?, ?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, question.getIdChapter());
@@ -48,14 +49,14 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public Optional<Question> searchById(int id) {
-    String sql = "SELECT id_chapter, question_number, response_type, comment_question, question_text FROM questions WHERE id = ?";
+    String sql = "SELECT chapter_id, question_number, response_type, comment_question, question_text FROM questions WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
-          int idChapter = response.getInt("id_chapter");
+          int idChapter = response.getInt("chapter_id");
           String questionNumber = response.getString("question_number");
           String responseType = response.getString("response_type");
           String commentQuestion = response.getString("comment_question");
@@ -71,20 +72,22 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public Optional<List<Question>> showAll(int limit, int offset) {
-    String sql = "SELECT id_question, question_number, response_type, comment_question, question_text FROM questions";
+    String sql = "SELECT id, chapter_id, question_number, response_type, comment_question, question_text, created_at, update_at FROM questions";
     List<Question> questions = new ArrayList<>();
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
-      statement.executeUpdate();
+      statement.executeQuery();
       try (ResultSet response = statement.executeQuery()) {
         while (response.next()) {
-          int idQuestion = response.getInt("id_question");
-          int idChapter = response.getInt("id_chapter");
+          int idQuestion = response.getInt("id");
+          int idChapter = response.getInt("chapter_id");
           String questionNumber = response.getString("question_number");
           String responseType = response.getString("response_type");
           String commentQuestion = response.getString("comment_question");
           String questionText = response.getString("question_text");
-          questions.add(new Question(idQuestion, idChapter, questionNumber, responseType, commentQuestion, questionText));
+          Date create_at = response.getDate("created_at");
+          Date updated_at = response.getDate("update_at");
+          questions.add(new Question(idQuestion, idChapter, questionNumber, responseType, commentQuestion, questionText, create_at, updated_at));
         }
         return Optional.of(questions);
       }
@@ -96,7 +99,7 @@ public class QuestionRepository implements QuestionService {
 
   @Override
   public void update(Question question) {
-    String sql = "UPDATE TABLE questions SET id_chapter = ?, question_number = ?, response_type = ?, comment_question = ?, question_text = ? WHERE id = ?";
+    String sql = "UPDATE questions SET chapter_id = ?, question_number = ?, response_type = ?, comment_question = ?, question_text = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, question.getIdChapter());
@@ -104,6 +107,7 @@ public class QuestionRepository implements QuestionService {
       statement.setString(3, question.getResponseType());
       statement.setString(4, question.getCommentQuestion());
       statement.setString(5, question.getQuestionText());
+      statement.setInt(6, question.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();

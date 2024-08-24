@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS survey_jr;
+DROP DATABASE IF EXISTS sourvey_jr;
 
-CREATE DATABASE survey_jr;
-USE survey_jr
+CREATE DATABASE sourvey_jr;
+USE sourvey_jr
 
 -- tables for user login
 CREATE TABLE roles (

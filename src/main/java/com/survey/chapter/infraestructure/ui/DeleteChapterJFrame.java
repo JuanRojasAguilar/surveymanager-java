@@ -13,14 +13,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.survey.chapter.application.DeleteChapterUseCase;
 import com.survey.chapter.domain.entity.Chapter;
+import com.survey.chapter.domain.service.ChapterService;
+import com.survey.chapter.infraestructure.repository.ChapterRepository;
 import com.survey.ui.StyleDefiner;
 
 public class DeleteChapterJFrame extends JFrame{
     private ChapterComboBox chapterComboBox;
     private JButton returnButton;
 
-    //initializer
+    private ChapterService chapterService = new ChapterRepository();
+    private DeleteChapterUseCase deleteChapterUseCase;
 
     public DeleteChapterJFrame() {
         initComponents();
@@ -51,13 +55,14 @@ public class DeleteChapterJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Chapter");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
         chapterComboBox.updateChapters();
-        formPanel.add(comboBoxLabel);
+        formPanel.add(chapterComboBox, gbc);
 
         row++;
         gbc.gridx = 0;
@@ -67,15 +72,20 @@ public class DeleteChapterJFrame extends JFrame{
         JButton deleteButton = StyleDefiner.defineButtonStyle(new JButton("Borrar"));
         deleteButton.addActionListener(e -> {
             Chapter chapter = chapterComboBox.getSelectedChapter();
-
+            
             int continuar = JOptionPane.showConfirmDialog(chapterComboBox, "seguro que quieres eliminar a este chapter?", "¿?", JOptionPane.YES_NO_OPTION);
-
+            
             if (continuar == 0) {
-                // initializer del delete
-                JOptionPane.showMessageDialog(null, "eliminado correctamente", "eliminado", JOptionPane.INFORMATION_MESSAGE);
+                deleteChapterUseCase = new DeleteChapterUseCase(chapterService);
+                boolean hasBeenDeleted = deleteChapterUseCase.execute(chapter.getId());
+                String mensaje = hasBeenDeleted ? "eliminado correctamente" : "No hemos podido eliminarlo, intenta de nuevo";
+                JOptionPane.showMessageDialog(null, mensaje, "eliminado", JOptionPane.INFORMATION_MESSAGE);
                 chapterComboBox.updateChapters();
             }
         });
+        formPanel.add(deleteButton, gbc);
+
+        add(formPanel, BorderLayout.CENTER);
     }
 
     public void setReturnActionListener(ActionListener actionListener) {

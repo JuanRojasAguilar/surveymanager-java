@@ -19,11 +19,15 @@ import com.survey.catalog.domain.entity.Catalog;
 import com.survey.catalog.infraestructure.ui.CatalogComboBox;
 import com.survey.question.domain.entity.Question;
 import com.survey.question.infraestructure.ui.QuestionComboBox;
+import com.survey.responseOption.application.AddResponseOptionUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.responseOption.domain.service.ResponseOptionService;
+import com.survey.responseOption.infraestructure.repository.ResponseOptionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class CreateResponseJFrame extends JFrame{
-    // response initializer
+    private ResponseOptionService responseOptionService = new ResponseOptionRepository();
+    private AddResponseOptionUseCase addResponseOptionUseCase;
 
     private JButton returnButton;
 
@@ -63,8 +67,9 @@ public class CreateResponseJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabelQuestion = new JLabel("Response: ");
+        JLabel comboBoxLabelQuestion = new JLabel("Question: ");
         formPanel.add(comboBoxLabelQuestion, gbc);
 
         gbc.gridx = 1;
@@ -101,7 +106,7 @@ public class CreateResponseJFrame extends JFrame{
         formPanel.add(commentLabel, gbc);
 
         gbc.gridx = 1;
-        commentField = StyleDefiner.defineFieldStyle(commentField);
+        commentField = StyleDefiner.defineFieldStyle(new JTextField(20));
         formPanel.add(commentField, gbc);
 
         row++;
@@ -112,7 +117,7 @@ public class CreateResponseJFrame extends JFrame{
         formPanel.add(optionLabel, gbc);
 
         gbc.gridx = 1;
-        optionnField = StyleDefiner.defineFieldStyle(optionnField);
+        optionnField = StyleDefiner.defineFieldStyle(new JTextField(20));
         formPanel.add(optionnField, gbc);
 
         row++;
@@ -132,11 +137,13 @@ public class CreateResponseJFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                addResponseOptionUseCase = new AddResponseOptionUseCase(responseOptionService);
+
                 String comment = commentField.getText();
                 String option = optionnField.getText();
                 ResponseOption response = responseComboBox.isActive() ? responseComboBox.getSelectedResponse() : null;
                 Question question = questionComboBox.getSelectedQuestion();
-                Catalog catalog = catalogComboBox.getSelectedCatalog();
+                Catalog catalog = catalogComboBox.isActive() ? catalogComboBox.getSelectedCatalog() : null;
 
                 if (comment.isEmpty() || option.isEmpty()) {
                     JOptionPane.showMessageDialog(commentField, "campos incompletos", "error", JOptionPane.WARNING_MESSAGE);
@@ -149,11 +156,11 @@ public class CreateResponseJFrame extends JFrame{
                 ResponseOption responseOption = new ResponseOption();
                 responseOption.setCommentResponse(comment);
                 responseOption.setOptionText(option);
-                responseOption.setIdCategoryCatalog(catalog.getId());
+                if (catalog != null) {responseOption.setIdCategoryCatalog(catalog.getId());}
                 if (response != null) {responseOption.setIdParentResponse(response.getId());}
                 responseOption.setIdQuestion(question.getId());
 
-                //initializer
+                addResponseOptionUseCase.execute(responseOption);
 
                 JOptionPane.showMessageDialog(commentField, "response guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
             } 

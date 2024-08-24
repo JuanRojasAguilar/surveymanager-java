@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import com.survey.catalog.application.ShowAllCatalogsUseCase;
 import com.survey.catalog.domain.entity.Catalog;
 import com.survey.catalog.domain.service.CatalogService;
-import com.survey.survey.infraestructure.ui.SurveyComboBox;
+import com.survey.catalog.infraestructure.repository.CatalogRepository;
 
 public class ListCatalogsJFrame extends JFrame{
     private DefaultTableModel model;
@@ -29,12 +29,9 @@ public class ListCatalogsJFrame extends JFrame{
     private JScrollPane scrollPane;
     private CatalogComboBox catalogComboBox;
     private JButton returnButton;
-    private CatalogService catalogService;
-    private ShowAllCatalogsUseCase showAllCatalogsUseCase;
+    private CatalogService catalogService = new CatalogRepository();
 
     private boolean initializer;
-
-    //initializer
 
     public ListCatalogsJFrame() {
         initializer = true;

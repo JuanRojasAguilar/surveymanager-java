@@ -33,7 +33,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
 
     @Override
     public void add(SubresponseOption subresponseOption) {
-        String sql = "INSERT INTO subresponse_options (id_response_option, subresponse_text) VALUES (?)";
+        String sql = "INSERT INTO subresponse_options (responseoptions_id, subresponse_text) VALUES (?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, subresponseOption.getIdResponseOption());
@@ -46,17 +46,17 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
 
     @Override
     public Optional<SubresponseOption> searchById(int id) {
-        String sql = "SELECT id_response_option, subresponse_text, created_at, updated_at FROM subresponse_options WHERE id = ?";
+        String sql = "SELECT responseoptions_id, subresponse_text, create_at, update_at FROM subresponse_options WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             statement.executeUpdate();
             try (ResultSet response = statement.executeQuery()) {
                 if (response.next()) {
-                    int idResponseOption = response.getInt("id_response_option");
+                    int idResponseOption = response.getInt("responseoptions_id");
                     String subresponseText = response.getString("subresponse_text");
-                    Date createdAt = response.getDate("created_at");
-                    Date updatedAt = response.getDate("updated_at");
+                    Date createdAt = response.getDate("create_at");
+                    Date updatedAt = response.getDate("update_at");
                     return Optional.of(new SubresponseOption(id, idResponseOption, subresponseText, createdAt, updatedAt));
                 }
             }
@@ -68,18 +68,18 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
 
     @Override
     public Optional<List<SubresponseOption>> showAll() {
-        String sql = "SELECT id_subresponse_option, id_response_option, subresponse_text, created_at, updated_at FROM subresponse_options WHERE id = ?";
+        String sql = "SELECT id, responseoptions_id, subresponse_text, create_at, update_at FROM subresponse_options";
         List<SubresponseOption> subresponseOptions = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.executeUpdate();
             try (ResultSet response = statement.executeQuery()) {
                 while (response.next()) {
-                    int idSubresponseOption = response.getInt("id_subresponse_option");
-                        int idResponseOption = response.getInt("id_response_option");
+                    int idSubresponseOption = response.getInt("id");
+                    int idResponseOption = response.getInt("responseoptions_id");
                     String subresponseText = response.getString("subresponse_text");
-                    Date createdAt = response.getDate("created_at");
-                    Date updatedAt = response.getDate("updated_at");
+                    Date createdAt = response.getDate("create_at");
+                    Date updatedAt = response.getDate("update_at");
                     subresponseOptions.add(new SubresponseOption(idSubresponseOption, idResponseOption, subresponseText, createdAt, updatedAt));
                 }
                 return Optional.of(subresponseOptions);
@@ -92,7 +92,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
 
     @Override
     public void update(SubresponseOption subresponseOption) {
-        String sql = "UPDATE TABLE response_Options SET id_response_option = ?, subresponse_text = ? WHERE id = ?";
+        String sql = "UPDATE response_options SET responseoptions_id = ?, subresponse_text = ? WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, subresponseOption.getIdResponseOption());

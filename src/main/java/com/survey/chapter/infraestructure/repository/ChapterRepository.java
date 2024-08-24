@@ -33,9 +33,12 @@ public class ChapterRepository implements ChapterService {
 
   @Override
   public void add(Chapter chapter) {
-    String sql = "INSERT INTO chapters (name) VALUES (?)";
+    String sql = "INSERT INTO chapter (chapter_number, chapter_title, survey_id) VALUES (?, ?, ?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
+      statement.setString(1, chapter.getChapterNumber());
+      statement.setString(2, chapter.getChapterTitle());
+      statement.setInt(3, chapter.getIdSurvey());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -44,18 +47,18 @@ public class ChapterRepository implements ChapterService {
 
   @Override
   public Optional<Chapter> searchById(int id) {
-    String sql = "SELECT id_survey, chapter_number, chapter_title, created_at, updated_at FROM chapters WHERE id = ?";
+    String sql = "SELECT survey_id, chapter_number, chapter_title, created_at, update_at FROM chapter WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
-      statement.executeUpdate();
+      statement.executeQuery();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
-          int idSurvey = response.getInt("id_survey");
+          int idSurvey = response.getInt("survey_id");
           String chapterNumber = response.getString("chapter_number");
           String chapterTitle = response.getString("chapter_title");
           Date createdAt = response.getDate("created_at");
-          Date updatedAt = response.getDate("updatedAt");
+          Date updatedAt = response.getDate("update_at");
           return Optional.of(new Chapter(id, idSurvey, chapterNumber, chapterTitle, createdAt, updatedAt));
         }
       }
@@ -67,18 +70,18 @@ public class ChapterRepository implements ChapterService {
 
   @Override
   public Optional<List<Chapter>> showAll(int limit, int offset) {
-    String sql = "SELECT id_chapter, id_survey, chapter_number, chapter_title, created_at, updated_at FROM chapters";
+    String sql = "SELECT id, survey_id, chapter_number, chapter_title, created_at, update_at FROM chapter";
     List<Chapter> chapters = new ArrayList<>();
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       try (ResultSet response = statement.executeQuery()) {
         while (response.next()) {
-          int idChapter = response.getInt("id_chapter");
-          int idSurvey = response.getInt("id_survey");
+          int idChapter = response.getInt("id");
+          int idSurvey = response.getInt("survey_id");
           String chapterNumber = response.getString("chapter_number");
           String chapterTitle = response.getString("chapter_title");
           Date createdAt = response.getDate("created_at");
-          Date updatedAt = response.getDate("updatedAt");
+          Date updatedAt = response.getDate("update_at");
           chapters.add(new Chapter(idChapter, idSurvey, chapterNumber, chapterTitle, createdAt, updatedAt));
         }
         return Optional.of(chapters);
@@ -91,12 +94,13 @@ public class ChapterRepository implements ChapterService {
 
   @Override
   public void update(Chapter chapter) {
-    String sql = "UPDATE TABLE chapters SET id_survey = ?, chapter_number = ?, chapter_title = ? WHERE id = ?";
+    String sql = "UPDATE chapter SET survey_id = ?, chapter_number = ?, chapter_title = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, chapter.getIdSurvey());
       statement.setString(2, chapter.getChapterNumber());
       statement.setString(3, chapter.getChapterTitle());
+      statement.setInt(4, chapter.getId());
       statement.executeUpdate();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -105,7 +109,7 @@ public class ChapterRepository implements ChapterService {
 
   @Override
   public boolean delete(int id) {
-    String sql = "DELETE FROM chapteres WHERE id = ?";
+    String sql = "DELETE FROM chapter WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);

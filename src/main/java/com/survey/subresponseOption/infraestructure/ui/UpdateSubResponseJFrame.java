@@ -15,15 +15,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.survey.catalog.domain.entity.Catalog;
-import com.survey.question.domain.entity.Question;
+import com.survey.responseOption.application.SearchResponseOptionByIdUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.responseOption.domain.service.ResponseOptionService;
 import com.survey.responseOption.infraestructure.ui.ResponseComboBox;
+import com.survey.subresponseOption.application.UpdateSubresponseOptionUseCase;
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
+import com.survey.subresponseOption.domain.service.SubresponseOptionService;
+import com.survey.subresponseOption.infraestructure.repository.SubresponseOptionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class UpdateSubResponseJFrame extends JFrame{
-    //initializer de SubResponse
+    private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
+    private UpdateSubresponseOptionUseCase updateSubresponseOptionUseCase;
+    private ResponseOptionService responseOptionService;
+    private SearchResponseOptionByIdUseCase searchResponseOptionByIdUseCase;
+
     private JButton returnButton;
 
     private SubResponseComboBox subResponseComboBox;
@@ -117,6 +124,7 @@ public class UpdateSubResponseJFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                updateSubresponseOptionUseCase = new UpdateSubresponseOptionUseCase(subresponseOptionService);
                 String subResponseText = subResponseTextField.getText();
                 ResponseOption response = responseComboBox.getSelectedResponse();
 
@@ -127,11 +135,10 @@ public class UpdateSubResponseJFrame extends JFrame{
 
                 subResponseTextField.setText("");
 
-                SubresponseOption subresponseOption = new SubresponseOption();
-                subresponseOption.setSubresponseText(subResponseText);
-                subresponseOption.setIdResponseOptions(response.getId());
+                subResponseToEdit.setSubresponseText(subResponseText);
+                subResponseToEdit.setIdResponseOption(response.getId());
 
-                //initializer
+                updateSubresponseOptionUseCase.execute(subResponseToEdit);
 
                 JOptionPane.showMessageDialog(subResponseTextField, "response actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }  
@@ -143,13 +150,14 @@ public class UpdateSubResponseJFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
+                    searchResponseOptionByIdUseCase = new SearchResponseOptionByIdUseCase(responseOptionService);
+
                     subResponseToEdit = subResponseComboBox.getSelectedSubResponse();
 
                     subResponseTextField.setText(subResponseToEdit.getSubresponseText());
                     subResponseTextField.setEditable(true);
 
-                    // initializer de response
-
+                    ResponseOption response = searchResponseOptionByIdUseCase.execute(subResponseToEdit.getIdResponseOption()).get();
                     responseComboBox.setSelectedResponse(response);
                     responseComboBox.switcher(true);
                     

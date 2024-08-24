@@ -1,24 +1,26 @@
 package com.survey.chapter.infraestructure.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.survey.catalog.domain.entity.Catalog;
 import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.domain.entity.Chapter;
 import com.survey.chapter.domain.service.ChapterService;
+import com.survey.chapter.infraestructure.repository.ChapterRepository;
 
 public class ChapterComboBox extends JPanel {
     private JComboBox<Chapter> chapterComboBox;
     private ShowAllChaptersUseCase showAllChaptersUseCase;
-    private ChapterService chapterService;
+    private ChapterService chapterService = new ChapterRepository();
 
     public ChapterComboBox() {
         chapterComboBox = new JComboBox<>();
+        chapterComboBox.setPreferredSize(new Dimension(120, 30));
 
         setLayout(new BorderLayout());
 
@@ -43,12 +45,14 @@ public class ChapterComboBox extends JPanel {
         });
 
         if (chapterComboBox.getItemCount() == 0) {
-            chapterComboBox.setEditable(false);
+            chapterComboBox.setEnabled(false);
+            revalidate();
+            repaint();
         }
     }
 
     public void switcher(boolean swich) {
-        chapterComboBox.setEditable(swich);
+        chapterComboBox.setEnabled(swich);
     }
 
     public void setSelectedChapter(Chapter chapter) {

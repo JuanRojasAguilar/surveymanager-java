@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import com.survey.question.application.ShowAllQuestionsUseCase;
 import com.survey.question.domain.entity.Question;
 import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 
 public class ListQuestionsJFrame extends JFrame {
     private DefaultTableModel model;
@@ -28,12 +29,12 @@ public class ListQuestionsJFrame extends JFrame {
     private JScrollPane scrollPane;
     private QuestionComboBox questionComboBox;
     private JButton returnButton;
+
     private ShowAllQuestionsUseCase showAllQuestionsUseCase;
-    private QuestionService questionService;
+    private QuestionService questionService = new QuestionRepository();
 
     private boolean initializer;
 
-    //initializer
 
     public ListQuestionsJFrame() {
         initializer = true;
@@ -94,6 +95,7 @@ public class ListQuestionsJFrame extends JFrame {
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
         }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 

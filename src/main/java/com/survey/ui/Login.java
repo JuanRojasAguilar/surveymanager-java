@@ -1,10 +1,5 @@
 package com.survey.ui;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.FocusListener;
-import java.awt.GridBagConstraints;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -172,4 +167,14 @@ public class Login extends JFrame {
 
 
     }    
+
+    private ActionListener returnSetVisibleFunction(JFrame panelToDispose) {
+        return new ActionListener() {
+            @Override
+                public void actionPerformed(ActionEvent e) {
+                    panelToDispose.dispose();
+                    setVisible(true);
+                }
+        };
+    }
 }

@@ -18,10 +18,11 @@ import javax.swing.JTextField;
 import com.survey.catalog.application.AddCatalogUseCase;
 import com.survey.catalog.domain.entity.Catalog;
 import com.survey.catalog.domain.service.CatalogService;
+import com.survey.catalog.infraestructure.repository.CatalogRepository;
 import com.survey.ui.StyleDefiner;
 
 public class CreateCatalogJFrame extends JFrame{
-    private CatalogService catalogService;
+    private CatalogService catalogService = new CatalogRepository();
     private AddCatalogUseCase addCatalogUseCase;
 
     private JButton returnButton;

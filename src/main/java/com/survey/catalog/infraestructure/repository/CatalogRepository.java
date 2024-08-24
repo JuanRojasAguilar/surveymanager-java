@@ -33,7 +33,7 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public void add(Catalog catalog) {
-    String sql = "INSERT INTO catalogs (name, created_at) VALUES (?, (CURDATE()))";
+    String sql = "INSERT INTO catalogs (name) VALUES (?)";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setString(1, catalog.getName());
@@ -45,18 +45,17 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public Optional<Catalog> searchById(int id) {
-    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs WHERE id = ?";
+    String sql = "SELECT id, name, created_at, updated_at FROM catalogs WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
       statement.executeUpdate();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
-          int idCatalog = response.getInt("id_catalog");
           String name = response.getString("name");
           Date createdAt = response.getDate("created_at");
           Date updatedAt = response.getDate("updated_at");
-          return Optional.of(new Catalog(idCatalog, name, createdAt, updatedAt));
+          return Optional.of(new Catalog(id, name, createdAt, updatedAt));
         }
       }
     } catch (SQLException e) {
@@ -68,17 +67,17 @@ public class CatalogRepository implements CatalogService {
   @Override
   public Optional<List<Catalog>> showAll(int limit, int offset) {
     List<Catalog> catalogs = new ArrayList<>();
-    String sql = "SELECT id_catalog, name, created_at, updated_at FROM catalogs LIMIT ?, ?";
+    String sql = "SELECT id, name, create_at, update_at FROM catalogs LIMIT ?, ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, limit);
       statement.setInt(2, offset);
       try (ResultSet response = statement.executeQuery()) {
         while (response.next()) {
-          int idCatalog = response.getInt("id_catalog");
+          int idCatalog = response.getInt("id");
           String name = response.getString("name");
-          Date createdAt = response.getDate("created_at");
-          Date updatedAt = response.getDate("updated_at");
+          Date createdAt = response.getDate("create_at");
+          Date updatedAt = response.getDate("update_at");
           catalogs.add(new Catalog(idCatalog, name, createdAt, updatedAt));
         }
         return Optional.of(catalogs);
@@ -91,7 +90,7 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public void update(Catalog catalog) {
-    String sql = "UPDATE TABLE catalogs SET name = ? WHERE id = ?";
+    String sql = "UPDATE catalogs SET name = ? WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setString(1, catalog.getName());

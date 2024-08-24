@@ -16,15 +16,15 @@ import javax.swing.JPanel;
 import com.survey.catalog.application.DeleteCatalogUseCase;
 import com.survey.catalog.domain.entity.Catalog;
 import com.survey.catalog.domain.service.CatalogService;
+import com.survey.catalog.infraestructure.repository.CatalogRepository;
 import com.survey.ui.StyleDefiner;
 
 public class DeleteCatalogJFrame extends JFrame{
     private CatalogComboBox catalogComboBox;
     private JButton returnButton;
-    private CatalogService catalogService;
+    private CatalogService catalogService = new CatalogRepository();
     private DeleteCatalogUseCase deleteCatalogUseCase;
 
-    //initializer
 
     public DeleteCatalogJFrame() {
         initComponents();

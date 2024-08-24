@@ -15,15 +15,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.survey.catalog.domain.entity.Catalog;
-import com.survey.question.domain.entity.Question;
 import com.survey.responseOption.domain.entity.ResponseOption;
 import com.survey.responseOption.infraestructure.ui.ResponseComboBox;
+import com.survey.subresponseOption.application.AddSubresponseOptionUseCase;
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
+import com.survey.subresponseOption.domain.service.SubresponseOptionService;
+import com.survey.subresponseOption.infraestructure.repository.SubresponseOptionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class CreateSubResponseJFrame extends JFrame {
-    // response initializer
+    private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
+    private AddSubresponseOptionUseCase addSubresponseOptionUseCase;
 
     private JButton returnButton;
 
@@ -94,6 +96,8 @@ public class CreateSubResponseJFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                addSubresponseOptionUseCase = new AddSubresponseOptionUseCase(subresponseOptionService);
+
                 String subResponseText = subResponseTextfield.getText();
                 ResponseOption response = responseComboBox.getSelectedResponse();
 
@@ -106,9 +110,9 @@ public class CreateSubResponseJFrame extends JFrame {
 
                 SubresponseOption subresponseOption = new SubresponseOption();
                 subresponseOption.setSubresponseText(subResponseText);
-                subresponseOption.setIdResponseOptions(response.getId());
+                subresponseOption.setIdResponseOption(response.getId());
 
-                //initializer
+                addSubresponseOptionUseCase.execute(subresponseOption);
 
                 JOptionPane.showMessageDialog(subResponseTextfield, "response guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
             } 

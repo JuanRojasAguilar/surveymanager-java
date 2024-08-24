@@ -21,9 +21,11 @@ import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.application.UpdateChapterUseCase;
 import com.survey.chapter.domain.entity.Chapter;
 import com.survey.chapter.domain.service.ChapterService;
+import com.survey.chapter.infraestructure.repository.ChapterRepository;
 import com.survey.survey.application.SearchSurveyByIdUseCase;
 import com.survey.survey.domain.entity.Survey;
 import com.survey.survey.domain.service.SurveyService;
+import com.survey.survey.infraestructure.repository.SurveyRepository;
 import com.survey.survey.infraestructure.ui.SurveyComboBox;
 import com.survey.ui.StyleDefiner;
 
@@ -36,9 +38,9 @@ public class UpdateChapterJFrame extends JFrame {
     private JButton updateButton;
     private ShowAllChaptersUseCase showAllChaptersUseCase;
     private UpdateChapterUseCase updateChapterUseCase;
-    private ChapterService chapterService;
+    private ChapterService chapterService = new ChapterRepository();
     private SearchSurveyByIdUseCase searchSurveyByIdUseCase;
-    private SurveyService surveyService;
+    private SurveyService surveyService = new SurveyRepository();
 
     private boolean initializer;
 
@@ -78,6 +80,7 @@ public class UpdateChapterJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("chapter");
         formPanel.add(comboBoxLabel, gbc);
@@ -174,7 +177,7 @@ public class UpdateChapterJFrame extends JFrame {
                     titleField.setEditable(true);
                     surveyComboBox.setSelectedSurvey(survey);
                     surveyComboBox.switcher(true);
-
+                    updateButton.setEnabled(true);
                 }
             }
         };

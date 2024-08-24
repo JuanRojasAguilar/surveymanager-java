@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,10 +18,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.survey.question.domain.entity.Question;
-import com.survey.question.infraestructure.ui.QuestionComboBox;
+import com.survey.responseOption.application.ShowAllResponseOptionsUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
-import com.survey.responseOption.domain.entity.ResponseOptionDTO;
+import com.survey.responseOption.domain.service.ResponseOptionService;
+import com.survey.responseOption.infraestructure.repository.ResponseOptionRepository;
 
 public class ListResponsesJFrame extends JFrame {
     private DefaultTableModel model;
@@ -31,7 +32,8 @@ public class ListResponsesJFrame extends JFrame {
 
     private boolean initializer;
 
-    //initializer
+    private ResponseOptionService responseOptionService = new ResponseOptionRepository();
+    private ShowAllResponseOptionsUseCase showAllResponseOptionsUseCase;
 
     public ListResponsesJFrame() {
         initializer = true;
@@ -66,6 +68,7 @@ public class ListResponsesJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Response");
         formPanel.add(comboBoxLabel, gbc);
@@ -92,6 +95,7 @@ public class ListResponsesJFrame extends JFrame {
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
         }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 
@@ -101,10 +105,11 @@ public class ListResponsesJFrame extends JFrame {
     }
 
     private void showAllResponses() {
-        //list from initializer
+        showAllResponseOptionsUseCase = new ShowAllResponseOptionsUseCase(responseOptionService);
+        List<ResponseOption> responses = showAllResponseOptionsUseCase.execute().get(); 
 
         responses.forEach(response -> {
-            Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreateAt(), response.getUpdateAt()};
+            Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreatedAt(), response.getUpdatedAt()};
             model.addRow(rowData);
         });
     }
@@ -116,7 +121,7 @@ public class ListResponsesJFrame extends JFrame {
                 if (!initializer) {
                     ResponseOption response = responseComboBox.getSelectedResponse();
                     model.setRowCount(0);
-                    Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreateAt(), response.getUpdateAt()};
+                    Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreatedAt(), response.getUpdatedAt()};
                     model.addRow(rowData);
                 }
             }

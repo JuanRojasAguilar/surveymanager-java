@@ -18,16 +18,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.survey.survey.domain.entity.Survey;
-import com.survey.catalog.domain.entity.Catalog;
 import com.survey.chapter.application.AddChapterUseCase;
 import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.domain.entity.Chapter;
 import com.survey.chapter.domain.service.ChapterService;
+import com.survey.chapter.infraestructure.repository.ChapterRepository;
 import com.survey.survey.infraestructure.ui.SurveyComboBox;
 import com.survey.ui.StyleDefiner;
 
 public class CreateChapterJFrame extends JFrame{
-    private ChapterService chapterService;
+    private ChapterService chapterService = new ChapterRepository();
     private AddChapterUseCase addChapterUseCase;
     private ShowAllChaptersUseCase showAllChaptersUseCase;
 
@@ -64,6 +64,7 @@ public class CreateChapterJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("survey");
         formPanel.add(comboBoxLabel, gbc);
