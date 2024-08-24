@@ -60,8 +60,9 @@ public class CreateSubResponseJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
-        JLabel comboBoxLabelQuestion = new JLabel("SubResponse: ");
+        JLabel comboBoxLabelQuestion = new JLabel("Response: ");
         formPanel.add(comboBoxLabelQuestion, gbc);
 
         gbc.gridx = 1;
@@ -76,7 +77,7 @@ public class CreateSubResponseJFrame extends JFrame {
         formPanel.add(subResponsetLabel, gbc);
 
         gbc.gridx = 1;
-        subResponseTextfield = StyleDefiner.defineFieldStyle(subResponseTextfield);
+        subResponseTextfield = StyleDefiner.defineFieldStyle(new JTextField(20));
         formPanel.add(subResponseTextfield, gbc);
 
         row++;

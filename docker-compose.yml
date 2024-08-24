@@ -20,3 +20,4 @@ services:
       - "3306:3306"
     volumes:
       - ./src/main/resources/database/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
+      - ./src/main/resources/database/dml.sql:/docker-entrypoint-initdb.d/dml.sql

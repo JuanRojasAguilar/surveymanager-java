@@ -14,6 +14,7 @@ public class Question {
 
     public Question() {
     }
+
     public Question(int id, int idChapter, String questionNumber, String responseType, String commentQuestion, String questionText) {
         this.setId(id);
         this.setIdChapter(idChapter);
@@ -98,4 +99,8 @@ public class Question {
 		this.idChapter = idChapter;
 	}
 
+    @Override
+    public String toString() {
+      return this.questionText;
+    }
 }

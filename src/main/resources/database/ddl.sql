@@ -12,7 +12,7 @@ CREATE TABLE roles (
 
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT,
-    enable boolean,
+    `enable` boolean,
     username VARCHAR(12) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     CONSTRAINT pk_id_users PRIMARY KEY (id)

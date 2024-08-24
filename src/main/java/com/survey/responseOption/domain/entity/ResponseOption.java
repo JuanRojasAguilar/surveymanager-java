@@ -88,4 +88,9 @@ public class ResponseOption {
   public Date getUpdatedAt() {
     return this.updatedAt;
   }
+
+  @Override
+  public String toString() {
+    return this.optionText;
+  }
 }

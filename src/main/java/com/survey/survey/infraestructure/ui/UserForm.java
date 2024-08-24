@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,5 +95,9 @@ public class UserForm extends JFrame {
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         add(jScrollPane, BorderLayout.CENTER);
+    }
+
+    public void setReturnActionListener(ActionListener actionListener) {
+        returnButton.addActionListener(actionListener);
     }
 }

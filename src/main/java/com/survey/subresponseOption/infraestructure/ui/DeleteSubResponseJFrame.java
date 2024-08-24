@@ -53,6 +53,7 @@ public class DeleteSubResponseJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("SubResponse");
         formPanel.add(comboBoxLabel, gbc);
@@ -80,6 +81,10 @@ public class DeleteSubResponseJFrame extends JFrame{
                 subResponseComboBox.updateSubResponses();
             }
         });
+
+        formPanel.add(deleteButton, gbc);
+
+        add(formPanel, BorderLayout.CENTER);
     }
 
     public void setReturnActionListener(ActionListener actionListener) {

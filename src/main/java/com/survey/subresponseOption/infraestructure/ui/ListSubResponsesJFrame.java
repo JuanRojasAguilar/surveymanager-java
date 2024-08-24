@@ -68,6 +68,7 @@ public class ListSubResponsesJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("SubResponse");
         formPanel.add(comboBoxLabel, gbc);
@@ -94,6 +95,7 @@ public class ListSubResponsesJFrame extends JFrame{
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
         }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 

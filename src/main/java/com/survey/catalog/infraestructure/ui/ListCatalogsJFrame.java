@@ -66,6 +66,7 @@ public class ListCatalogsJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Catalog");
         formPanel.add(comboBoxLabel, gbc);
@@ -84,14 +85,15 @@ public class ListCatalogsJFrame extends JFrame{
         String[] columnNames = {"id", "nombre", "createdAt", "updatedAt"};
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
-        table.setRowHeight(100);
+        table.setRowHeight(30);
         table.setEnabled(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        table.getColumnModel().getColumn(0).setPreferredWidth(100);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100);
+        int columnWidth = 500 / columnNames.length; 
+        for (int i = 0; i < columnNames.length; i++ ) {
+            table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
+        }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 

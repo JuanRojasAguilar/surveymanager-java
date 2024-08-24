@@ -52,6 +52,7 @@ public class CreateCatalogJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel nombreLabel = new JLabel("nombre: ");
         formPanel.add(nombreLabel, gbc);

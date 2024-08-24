@@ -57,4 +57,9 @@ public class Catalog {
   public void refreshUpdateDate() {
     this.updatedAt = (Date) new java.util.Date();
   }
+
+  @Override
+  public String toString() {
+    return this.name;
+  }
 }

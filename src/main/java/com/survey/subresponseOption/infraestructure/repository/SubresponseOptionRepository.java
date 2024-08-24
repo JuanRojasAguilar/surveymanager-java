@@ -72,7 +72,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
         List<SubresponseOption> subresponseOptions = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.executeUpdate();
+            statement.executeQuery();
             try (ResultSet response = statement.executeQuery()) {
                 while (response.next()) {
                     int idSubresponseOption = response.getInt("id");
@@ -92,7 +92,7 @@ public class SubresponseOptionRepository implements SubresponseOptionService {
 
     @Override
     public void update(SubresponseOption subresponseOption) {
-        String sql = "UPDATE response_options SET responseoptions_id = ?, subresponse_text = ? WHERE id = ?";
+        String sql = "UPDATE subresponse_options SET responseoptions_id = ?, subresponse_text = ? WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, subresponseOption.getIdResponseOption());

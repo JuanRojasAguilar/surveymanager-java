@@ -42,10 +42,6 @@ public class AdminJFrame extends JFrame {
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         returnButton = new JButton("<--");
-        returnButton.addActionListener(e -> {
-            setVisible(false);
-            new Login();
-        });
         topPanel.add(returnButton);
         add(topPanel, BorderLayout.NORTH);
 

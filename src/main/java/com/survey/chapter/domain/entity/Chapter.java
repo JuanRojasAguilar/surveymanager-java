@@ -70,4 +70,8 @@ public class Chapter {
     this.updatedAt = updatedAt;
   }
 
+  @Override
+  public String toString() {
+    return this.chapterTitle;
+  }
 }

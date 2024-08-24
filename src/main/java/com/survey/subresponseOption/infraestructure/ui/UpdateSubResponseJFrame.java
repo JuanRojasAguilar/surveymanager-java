@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import com.survey.responseOption.application.SearchResponseOptionByIdUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
 import com.survey.responseOption.domain.service.ResponseOptionService;
+import com.survey.responseOption.infraestructure.repository.ResponseOptionRepository;
 import com.survey.responseOption.infraestructure.ui.ResponseComboBox;
 import com.survey.subresponseOption.application.UpdateSubresponseOptionUseCase;
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
@@ -28,7 +29,7 @@ import com.survey.ui.StyleDefiner;
 public class UpdateSubResponseJFrame extends JFrame{
     private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
     private UpdateSubresponseOptionUseCase updateSubresponseOptionUseCase;
-    private ResponseOptionService responseOptionService;
+    private ResponseOptionService responseOptionService = new ResponseOptionRepository();
     private SearchResponseOptionByIdUseCase searchResponseOptionByIdUseCase;
 
     private JButton returnButton;
@@ -74,6 +75,7 @@ public class UpdateSubResponseJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("subResponse");
         formPanel.add(comboBoxLabel, gbc);
@@ -102,7 +104,7 @@ public class UpdateSubResponseJFrame extends JFrame{
         formPanel.add(subResponseLabel, gbc);
 
         gbc.gridx = 1;
-        subResponseTextField = StyleDefiner.defineFieldStyle(subResponseTextField);
+        subResponseTextField = StyleDefiner.defineFieldStyle(new JTextField(20));
         subResponseTextField.setEditable(false);
         formPanel.add(subResponseTextField, gbc);
 
@@ -158,8 +160,8 @@ public class UpdateSubResponseJFrame extends JFrame{
                     subResponseTextField.setEditable(true);
 
                     ResponseOption response = searchResponseOptionByIdUseCase.execute(subResponseToEdit.getIdResponseOption()).get();
-                    responseComboBox.setSelectedResponse(response);
                     responseComboBox.switcher(true);
+                    responseComboBox.setSelectedResponse(response);
                     
                     updateButton.setEnabled(true);
 

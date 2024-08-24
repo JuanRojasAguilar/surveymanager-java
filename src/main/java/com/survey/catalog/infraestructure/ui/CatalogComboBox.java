@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Optional;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -24,7 +23,6 @@ public class CatalogComboBox extends JPanel {
     private ShowAllCatalogsUseCase showAllCatalogsUseCase;
 
     public CatalogComboBox() {
-        this.showAllCatalogsUseCase = new ShowAllCatalogsUseCase(catalogService);
         catalogComboBox = new JComboBox<>();
         catalogComboBox.setPreferredSize(new Dimension(120, 30));
         catalogComboBox.setEnabled(false);
@@ -42,7 +40,7 @@ public class CatalogComboBox extends JPanel {
 
     public CatalogComboBox(ActionListener actionListenerComboBox) {
         catalogComboBox = new JComboBox<>();
-        catalogComboBox.addActionListener(catalogComboBox);
+        catalogComboBox.addActionListener(actionListenerComboBox);
 
         setLayout(new BorderLayout());
 
@@ -50,9 +48,10 @@ public class CatalogComboBox extends JPanel {
     }
 
     public void updateCatalogs() {
-        Optional<List<Catalog>> catalogs = showAllCatalogsUseCase.execute(10, 0);
+        showAllCatalogsUseCase = new ShowAllCatalogsUseCase(catalogService);
+        List<Catalog> catalogs = showAllCatalogsUseCase.execute(10, 0).get();
         catalogComboBox.removeAllItems();
-        catalogs.get().forEach(catalog -> {
+        catalogs.forEach(catalog -> {
             catalogComboBox.addItem(catalog);
         });
         

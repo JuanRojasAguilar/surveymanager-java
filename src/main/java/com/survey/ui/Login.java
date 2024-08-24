@@ -8,12 +8,26 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
-import com.survey.rol.application.SearchRolByIdUseCase;
+import com.survey.survey.infraestructure.ui.UserForm;
+import com.survey.user.application.AddUserUseCase;
+import com.survey.user.application.SearchUserUseCase;
+import com.survey.user.domain.entity.User;
+import com.survey.user.domain.service.UserService;
+import com.survey.user.infrastructure.repository.UserRepository;
+import com.survey.users_roles.application.AddUserRoleUseCase;
+import com.survey.users_roles.application.GetUserRolesUseCase;
+import com.survey.users_roles.domain.entity.UserRol;
+import com.survey.users_roles.domain.service.UserRolService;
+import com.survey.users_roles.infrastructure.UserRolRepository;
 
 public class Login extends JFrame {
-    // private User user;
-    // private rolInitializer
-    // private userInitializer
+    private User user;
+    private UserService userService = new UserRepository();
+    private AddUserUseCase addUserUseCase;
+    private SearchUserUseCase searchUserUseCase;
+    private UserRolService userRolService = new UserRolRepository();
+    private AddUserRoleUseCase addUserRoleUseCase;
+    private GetUserRolesUseCase getUserRolesUseCase;
 
     JPanel loginPanel;
     JPanel resgisterPanel;
@@ -22,7 +36,11 @@ public class Login extends JFrame {
     JPasswordField passwordField;
 
     public Login() {
-        
+        addUserUseCase = new AddUserUseCase(userService);
+        searchUserUseCase = new SearchUserUseCase(userService);
+
+        addUserRoleUseCase = new AddUserRoleUseCase(userRolService);
+        getUserRolesUseCase = new GetUserRolesUseCase(userRolService);
 
         createLoginFrame();
 
@@ -85,27 +103,27 @@ public class Login extends JFrame {
 
         JButton enterButton = new JButton("  Enter  ");
         enterButton.addActionListener(e -> {
-            String user = userField.getText();
-            String password = new String(passwordField.getPassword());
+            String username = userField.getText();
+            String password = new String(passwordField.getPassword());  
 
-            /*
-            try {
-                User user = (searchUserByIdUseCase.execute(user, password)).get();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(loginPanel, "el usuario no existe", "error", JOptionPane.ERROR_MESSAGE);
-                return;
+            User user = searchUserUseCase.execute(username, password).get();
+            List<UserRol> userRols = getUserRolesUseCase.execute(user.getId());
+            if (userRols.size() == 1) {
+                UserRol userRol = userRols.get(0);
+                if (userRol.getRolId() == 1) {
+                    AdminJFrame adminJFrame = new AdminJFrame();
+                    adminJFrame.setReturnActionListener(returnSetVisibleFunction(adminJFrame));
+                    adminJFrame.setLocationRelativeTo(buttonsPanel);
+                    setVisible(false);
+                    adminJFrame.setVisible(true);
+                } else {
+                    UserForm userForm = new UserForm();
+                    userForm.setReturnActionListener(returnSetVisibleFunction(userForm));
+                    userForm.setLocationRelativeTo(buttonsPanel);
+                    setVisible(false);
+                    userForm.setVisible(true);
+                }
             }
-             */
-
-            // Rol userRol = (searchRolByIdUseCase.execute(user.getIdRol)).get();
-
-            /* 
-            if(userRol == 1) {
-                evoqueAdminJFrame();
-            } else {
-                evoqueUserJFrame();
-            }
-        */
         });
         buttonsPanel.add(enterButton);
 
@@ -121,11 +139,20 @@ public class Login extends JFrame {
                     enterButton.removeActionListener(actionListener);
                 });
                 enterButton.addActionListener(event -> {
-                    String user = userField.getText();
+                    String username = userField.getText();
                     String password = new String(passwordField.getPassword());
+                    user = new User();
+                    user.setUsername(username);
+                    user.setPassword(password);
 
-                    // User user = (AddUserUseCase.execute(new User(user, password, 1)));
-                    // evoqueUserJframe();
+                    boolean hasBeenAdded = addUserUseCase.execute(user);
+                    if (hasBeenAdded) {
+                        User newUser = searchUserUseCase.execute(username, password).get();
+                        addUserRoleUseCase.execute(newUser.getId());
+                    }
+
+                    userField.setText("");
+                    passwordField.setText("");
                 });
             } else {
                 title.setText("USER LOGIN");
@@ -135,27 +162,27 @@ public class Login extends JFrame {
                     enterButton.removeActionListener(actionListener);
                 });
                 enterButton.addActionListener(event -> {
-                    String user = userField.getText();
-                    String password = new String(passwordField.getPassword());
-        
-                    /*
-                    try {
-                        User user = (searchUserByIdUseCase.execute(user, password)).get();
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(loginPanel, "el usuario no existe", "error", JOptionPane.ERROR_MESSAGE);
-                        return;
+                    String username = userField.getText();
+                    String password = new String(passwordField.getPassword());  
+
+                    User user = searchUserUseCase.execute(username, password).get();
+                    List<UserRol> userRols = getUserRolesUseCase.execute(user.getId());
+                    if (userRols.size() == 1) {
+                        UserRol userRol = userRols.get(0);
+                        if (userRol.getRolId() == 1) {
+                            AdminJFrame adminJFrame = new AdminJFrame();
+                            adminJFrame.setReturnActionListener(returnSetVisibleFunction(adminJFrame));
+                            adminJFrame.setLocationRelativeTo(buttonsPanel);
+                            setVisible(false);
+                            adminJFrame.setVisible(true);
+                        } else {
+                            UserForm userForm = new UserForm();
+                            userForm.setReturnActionListener(returnSetVisibleFunction(userForm));
+                            userForm.setLocationRelativeTo(buttonsPanel);
+                            setVisible(false);
+                            userForm.setVisible(true);
+                        }
                     }
-                     */
-        
-                    // Rol userRol = (searchRolByIdUseCase.execute(user.getIdRol)).get();
-        
-                    /* 
-                    if(userRol == 1) {
-                        evoqueAdminJFrame();
-                    } else {
-                        evoqueUserJFrame();
-                    }
-                */
                 });
             }
         });

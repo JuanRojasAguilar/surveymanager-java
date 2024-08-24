@@ -15,7 +15,9 @@ import com.survey.responseOption.domain.service.ResponseOptionService;
 import com.survey.responseOption.infraestructure.repository.ResponseOptionRepository;
 
 public class ResponseComboBox extends JPanel{
-    private  JComboBox<ResponseOption> responseOptionComboBox;
+    private JComboBox<ResponseOption> responseOptionComboBox;
+    private JButton activar;
+    
     private boolean isActive = false;
 
     private ResponseOptionService responseOptionService = new ResponseOptionRepository();
@@ -25,7 +27,7 @@ public class ResponseComboBox extends JPanel{
         responseOptionComboBox = new JComboBox<>();
         responseOptionComboBox.setPreferredSize(new Dimension(120, 30));
         responseOptionComboBox.setEnabled(false);
-        JButton activar = new JButton("x");
+        activar = new JButton("x");
         activar.addActionListener(e -> {
             responseOptionComboBox.setEnabled(!isActive);
             isActive = !isActive;
@@ -60,7 +62,9 @@ public class ResponseComboBox extends JPanel{
     }
 
     public void switcher(boolean swich) {
+        activar.setEnabled(swich);
         responseOptionComboBox.setEnabled(swich);
+        isActive = swich;
     }
 
     public void setSelectedResponse(ResponseOption responseOption) {

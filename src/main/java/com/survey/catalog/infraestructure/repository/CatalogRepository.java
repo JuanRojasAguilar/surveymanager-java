@@ -45,7 +45,7 @@ public class CatalogRepository implements CatalogService {
 
   @Override
   public Optional<Catalog> searchById(int id) {
-    String sql = "SELECT id, name, created_at, updated_at FROM catalogs WHERE id = ?";
+    String sql = "SELECT id, name, create_at, update_at FROM catalogs WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
@@ -53,8 +53,8 @@ public class CatalogRepository implements CatalogService {
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
           String name = response.getString("name");
-          Date createdAt = response.getDate("created_at");
-          Date updatedAt = response.getDate("updated_at");
+          Date createdAt = response.getDate("create_at");
+          Date updatedAt = response.getDate("update_at");
           return Optional.of(new Catalog(id, name, createdAt, updatedAt));
         }
       }
@@ -65,7 +65,7 @@ public class CatalogRepository implements CatalogService {
   }
 
   @Override
-  public Optional<List<Catalog>> showAll(int limit, int offset) {
+  public Optional<List<Catalog>> showAll(int offset, int limit) {
     List<Catalog> catalogs = new ArrayList<>();
     String sql = "SELECT id, name, create_at, update_at FROM catalogs LIMIT ?, ?";
     try {

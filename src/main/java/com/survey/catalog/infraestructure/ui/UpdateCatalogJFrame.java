@@ -15,15 +15,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.catalog.application.UpdateCatalogUseCase;
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
+import com.survey.catalog.infraestructure.repository.CatalogRepository;
 import com.survey.ui.StyleDefiner;
 
 public class UpdateCatalogJFrame extends JFrame{
-        private JButton returnButton;
+        private CatalogService catalogService = new CatalogRepository();
+        private UpdateCatalogUseCase updateCatalogUseCase;
 
         private CatalogComboBox catalogComboBox;
         private JTextField nombreField;
         private JButton updateButton;
+        private JButton returnButton;
 
         private boolean initializer;
 
@@ -64,6 +69,7 @@ public class UpdateCatalogJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("catalog");
         formPanel.add(comboBoxLabel, gbc);
@@ -100,6 +106,7 @@ public class UpdateCatalogJFrame extends JFrame{
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                updateCatalogUseCase = new UpdateCatalogUseCase(catalogService);
                 String nombre = nombreField.getText();
                 
                 if (nombre.isEmpty()) {
@@ -110,7 +117,7 @@ public class UpdateCatalogJFrame extends JFrame{
                 Catalog catalog = new Catalog(nombre);
                 catalog.setId(idToUpdate);
 
-                //initializer
+                updateCatalogUseCase.execute(catalog);
 
                 JOptionPane.showMessageDialog(nombreField, "usuario actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }
