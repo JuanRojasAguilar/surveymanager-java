@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -47,6 +48,7 @@ public class UpdateResponseJFrame extends JFrame{
     private ResponseComboBox responseComboBox;
     private QuestionComboBox questionComboBox;
     private CatalogComboBox catalogComboBox; 
+    private JComboBox<String> subResponseType;
     private JTextField commentField;
     private JTextField optionnField;
     private JButton updateButton;
@@ -68,6 +70,10 @@ public class UpdateResponseJFrame extends JFrame{
         responseComboBox = new ResponseComboBox();
         questionComboBox = new QuestionComboBox();
         catalogComboBox = new CatalogComboBox();
+        subResponseType = new JComboBox<>();
+        subResponseType.addItem("seleccion multiple");
+        subResponseType.addItem("seleccion");
+        subResponseType.addItem("escrita");
     }
 
     private void createUpdateFrame() {
@@ -138,6 +144,17 @@ public class UpdateResponseJFrame extends JFrame{
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
+        JLabel typeLabel = new JLabel("tipo: ");
+        formPanel.add(typeLabel, gbc);
+
+        gbc.gridx = 1;
+        subResponseType.setEnabled(false);
+        formPanel.add(subResponseType, gbc);
+
+        row++;
+        gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         JLabel commentLabel = new JLabel("comment: ");
         formPanel.add(commentLabel, gbc);
 
@@ -180,6 +197,7 @@ public class UpdateResponseJFrame extends JFrame{
 
                 String comment = commentField.getText();
                 String option = optionnField.getText();
+                String type = (String) subResponseType.getSelectedItem();
                 ResponseOption response = responseComboBox.isActive() ? responseComboBox.getSelectedResponse() : null;
                 Question question = questionComboBox.getSelectedQuestion();
                 Catalog catalog = catalogComboBox.getSelectedCatalog();
@@ -194,9 +212,19 @@ public class UpdateResponseJFrame extends JFrame{
 
                 responseToEdit.setCommentResponse(comment);
                 responseToEdit.setOptionText(option);
+                responseToEdit.setSubresponseType(type);
                 responseToEdit.setIdCategoryCatalog(catalog.getId());
                 if (response != null) {responseToEdit.setIdParentResponse(response.getId());}
                 responseToEdit.setIdQuestion(question.getId());
+
+                if (responseToEdit.getIdQuestion() != response.getIdQuestion()) {
+                    JOptionPane.showMessageDialog(commentField, "la response y la response parent tienen que pertenecer a la misma pregunta", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (question.getResponseType().equals("seleccion") || question.getResponseType().equals("escrita")) {
+                    JOptionPane.showMessageDialog(commentField, "el response type de esta pregunta debe ser de seleccion", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 updateResponseOptionUseCase.execute(responseToEdit);
 
@@ -222,6 +250,11 @@ public class UpdateResponseJFrame extends JFrame{
 
                     optionnField.setText(responseToEdit.getOptionText());
                     optionnField.setEditable(true);
+
+                    subResponseType.setSelectedItem(responseToEdit.getSubresponseType());
+                    subResponseType.setEnabled(true);
+
+                    
 
                     if (responseToEdit.getIdCategoryCatalog() != 0) {
                         Catalog catalog = searchCatalogByIdUseCase.execute(responseToEdit.getIdCategoryCatalog()).get();

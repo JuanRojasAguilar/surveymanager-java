@@ -49,7 +49,7 @@ public class CatalogRepository implements CatalogService {
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
-      statement.executeUpdate();
+      statement.executeQuery();
       try (ResultSet response = statement.executeQuery()) {
         if (response.next()) {
           String name = response.getString("name");

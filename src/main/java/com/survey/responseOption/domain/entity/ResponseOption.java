@@ -9,18 +9,20 @@ public class ResponseOption {
   private int idQuestion;
   private String commentResponse;
   private String optionText;
+  private String subresponseType;
   private Date createdAt;
   private Date updatedAt;
 
   public ResponseOption() {}
 
-  public ResponseOption(int id, int idCategoryCatalog, int idParentResponse, int idQuestion, String commentResponse, String optionText, Date createdAt, Date updatedAt) {
+  public ResponseOption(int id, int idCategoryCatalog, int idParentResponse, int idQuestion, String commentResponse, String optionText, String subresponseType, Date createdAt, Date updatedAt) {
     this.setId(id);
     this.setIdCategoryCatalog(idCategoryCatalog);
     this.setIdParentResponse(idParentResponse);
     this.setIdQuestion(idQuestion);
     this.setCommentResponse(commentResponse);
     this.setOptionText(optionText);
+    this.setSubresponseType(subresponseType);
     this.setCreatedAt(createdAt);
     this.setUpdatedAt(updatedAt);
   }
@@ -92,5 +94,13 @@ public class ResponseOption {
   @Override
   public String toString() {
     return this.optionText;
+  }
+
+  public String getSubresponseType() {
+    return subresponseType;
+  }
+
+  public void setSubresponseType(String subresponseType) {
+    this.subresponseType = subresponseType;
   }
 }

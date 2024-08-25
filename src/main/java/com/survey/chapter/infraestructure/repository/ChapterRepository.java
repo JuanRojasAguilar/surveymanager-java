@@ -69,7 +69,7 @@ public class ChapterRepository implements ChapterService {
   }
 
   @Override
-  public Optional<List<Chapter>> showAll(int limit, int offset) {
+  public Optional<List<Chapter>> showAll() {
     String sql = "SELECT id, survey_id, chapter_number, chapter_title, created_at, update_at FROM chapter";
     List<Chapter> chapters = new ArrayList<>();
     try {

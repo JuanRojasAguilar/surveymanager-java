@@ -114,7 +114,7 @@ public class CreateChapterJFrame extends JFrame{
 
                 titleField.setText("");
 
-                List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
+                List<Chapter> chapters = showAllChaptersUseCase.execute().get();
 
                 List<Integer> numeroDeChapters = new ArrayList<>();
                 

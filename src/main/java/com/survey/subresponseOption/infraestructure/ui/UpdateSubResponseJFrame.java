@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.question.application.SearchQuestionByIdUseCase;
+import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 import com.survey.responseOption.application.SearchResponseOptionByIdUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
 import com.survey.responseOption.domain.service.ResponseOptionService;
@@ -31,6 +35,8 @@ public class UpdateSubResponseJFrame extends JFrame{
     private UpdateSubresponseOptionUseCase updateSubresponseOptionUseCase;
     private ResponseOptionService responseOptionService = new ResponseOptionRepository();
     private SearchResponseOptionByIdUseCase searchResponseOptionByIdUseCase;
+    private QuestionService questionService = new QuestionRepository();
+    private SearchQuestionByIdUseCase searchQuestionByIdUseCase;
 
     private JButton returnButton;
 
@@ -126,12 +132,19 @@ public class UpdateSubResponseJFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                searchQuestionByIdUseCase = new SearchQuestionByIdUseCase(questionService);
                 updateSubresponseOptionUseCase = new UpdateSubresponseOptionUseCase(subresponseOptionService);
                 String subResponseText = subResponseTextField.getText();
                 ResponseOption response = responseComboBox.getSelectedResponse();
 
                 if (subResponseText.isEmpty()) {
                     JOptionPane.showMessageDialog(subResponseTextField, "campos incompletos", "error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                Question question = searchQuestionByIdUseCase.execute(response.getIdQuestion()).get();
+                if (question.getResponseType().equals("escrita")) {
+                    JOptionPane.showMessageDialog(responseComboBox, "no se puede agregar subrespuestas a los campos de texto", "error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 

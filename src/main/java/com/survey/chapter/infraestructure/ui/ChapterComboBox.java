@@ -38,7 +38,7 @@ public class ChapterComboBox extends JPanel {
 
     public void updateChapters() {
         showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
-        List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
+        List<Chapter> chapters = showAllChaptersUseCase.execute().get();
         chapterComboBox.removeAllItems();
         chapters.forEach(chapter -> {
             chapterComboBox.addItem(chapter);

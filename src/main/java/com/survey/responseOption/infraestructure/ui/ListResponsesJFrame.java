@@ -84,7 +84,7 @@ public class ListResponsesJFrame extends JFrame {
         gbc.weighty = 1;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
-        String[] columnNames = {"id", "categoryCatalog", "parentResponse", "question", "optionText", "createdAt", "updateAt"};
+        String[] columnNames = {"id", "categoryCatalog", "parentResponse", "question", "optionText", "type", "createdAt", "updateAt"};
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
         table.setRowHeight(30);
@@ -109,7 +109,7 @@ public class ListResponsesJFrame extends JFrame {
         List<ResponseOption> responses = showAllResponseOptionsUseCase.execute().get(); 
 
         responses.forEach(response -> {
-            Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreatedAt(), response.getUpdatedAt()};
+            Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getSubresponseType(), response.getCreatedAt(), response.getUpdatedAt()};
             model.addRow(rowData);
         });
     }
@@ -121,7 +121,7 @@ public class ListResponsesJFrame extends JFrame {
                 if (!initializer) {
                     ResponseOption response = responseComboBox.getSelectedResponse();
                     model.setRowCount(0);
-                    Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreatedAt(), response.getUpdatedAt()};
+                    Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getSubresponseType(), response.getCreatedAt(), response.getUpdatedAt()};
                     model.addRow(rowData);
                 }
             }

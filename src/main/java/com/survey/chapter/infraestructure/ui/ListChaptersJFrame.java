@@ -106,7 +106,7 @@ public class ListChaptersJFrame extends JFrame{
 
     private void showAllChapters() {
         showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
-        List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
+        List<Chapter> chapters = showAllChaptersUseCase.execute().get();
 
         chapters.forEach(chapter -> {
             Object[] rowData = {chapter.getId(), chapter.getIdSurvey(), chapter.getChapterNumber(), chapter.getChapterTitle(), chapter.getCreatedAt(), chapter.getUpdatedAt()};

@@ -86,7 +86,7 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public Optional<ResponseOption> searchById(int id) {
-    String sql = "SELECT categorycatalog_id, parentresponse_id, question_id, comment_response, option_text, create_at, update_at FROM response_options WHERE id = ?";
+    String sql = "SELECT categorycatalog_id, parentresponse_id, question_id, comment_response, option_text, subresponse_type, create_at, update_at FROM response_options WHERE id = ?";
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, id);
@@ -97,9 +97,10 @@ public class ResponseOptionRepository implements ResponseOptionService {
           int idQuestion = response.getInt("question_id");
           String commentResponse = response.getString("comment_response");
           String optionText = response.getString("option_text");
+          String subResponseType = response.getString("subresponse_type");
           Date createdAt = response.getDate("create_at");
           Date updatedAt = response.getDate("update_At");
-          return Optional.of(new ResponseOption(id, idCategoryCatalog, idParentResponse, idQuestion, commentResponse, optionText, createdAt, updatedAt));
+          return Optional.of(new ResponseOption(id, idCategoryCatalog, idParentResponse, idQuestion, commentResponse, optionText, subResponseType, createdAt, updatedAt));
         }
       }
     } catch (SQLException e) {
@@ -110,7 +111,7 @@ public class ResponseOptionRepository implements ResponseOptionService {
 
   @Override
   public Optional<List<ResponseOption>> showAll() {
-    String sql = "SELECT id, categorycatalog_id, parentresponse_id, question_id, comment_response, option_text, create_at, update_at FROM response_options";
+    String sql = "SELECT id, categorycatalog_id, parentresponse_id, question_id, comment_response, subresponse_type, option_text, create_at, update_at FROM response_options";
     List<ResponseOption> responseOptions = new ArrayList<>();
     try {
       PreparedStatement statement = connection.prepareStatement(sql);
@@ -122,9 +123,10 @@ public class ResponseOptionRepository implements ResponseOptionService {
           int idQuestion = response.getInt("question_id");
           String commentResponse = response.getString("comment_response");
           String optionText = response.getString("option_text");
+          String subResponseType = response.getString("subresponse_type");
           Date createdAt = response.getDate("create_at");
           Date updatedAt = response.getDate("update_At");
-          responseOptions.add(new ResponseOption(idResponseOption, idCategoryCatalog, idParentResponse, idQuestion, commentResponse, optionText, createdAt, updatedAt));
+          responseOptions.add(new ResponseOption(idResponseOption, idCategoryCatalog, idParentResponse, idQuestion, commentResponse, optionText, subResponseType, createdAt, updatedAt));
         }
         return Optional.of(responseOptions);
       }

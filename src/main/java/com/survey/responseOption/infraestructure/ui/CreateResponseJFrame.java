@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,6 +32,7 @@ public class CreateResponseJFrame extends JFrame{
 
     private JButton returnButton;
 
+    private JComboBox<String> subResponseType;
     private ResponseComboBox responseComboBox;
     private QuestionComboBox questionComboBox;
     private CatalogComboBox catalogComboBox; 
@@ -46,6 +48,10 @@ public class CreateResponseJFrame extends JFrame{
         responseComboBox = new ResponseComboBox();
         questionComboBox = new QuestionComboBox();
         catalogComboBox = new CatalogComboBox();
+        subResponseType = new JComboBox<>();
+        subResponseType.addItem("seleccion multiple");
+        subResponseType.addItem("seleccion");
+        subResponseType.addItem("escrita");
     }
 
     private void createCreateFrame() {
@@ -102,6 +108,16 @@ public class CreateResponseJFrame extends JFrame{
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
+        JLabel typeLabel = new JLabel("tipo: ");
+        formPanel.add(typeLabel, gbc);
+
+        gbc.gridx = 1;
+        formPanel.add(subResponseType, gbc);
+
+        row++;
+        gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         JLabel commentLabel = new JLabel("comment: ");
         formPanel.add(commentLabel, gbc);
 
@@ -142,6 +158,7 @@ public class CreateResponseJFrame extends JFrame{
                 String comment = commentField.getText();
                 String option = optionnField.getText();
                 ResponseOption response = responseComboBox.isActive() ? responseComboBox.getSelectedResponse() : null;
+                String type = (String) subResponseType.getSelectedItem();
                 Question question = questionComboBox.getSelectedQuestion();
                 Catalog catalog = catalogComboBox.isActive() ? catalogComboBox.getSelectedCatalog() : null;
 
@@ -156,9 +173,18 @@ public class CreateResponseJFrame extends JFrame{
                 ResponseOption responseOption = new ResponseOption();
                 responseOption.setCommentResponse(comment);
                 responseOption.setOptionText(option);
+                responseOption.setSubresponseType(type);
                 if (catalog != null) {responseOption.setIdCategoryCatalog(catalog.getId());}
                 if (response != null) {responseOption.setIdParentResponse(response.getId());}
                 responseOption.setIdQuestion(question.getId());
+                if (responseOption.getIdQuestion() != response.getIdQuestion()) {
+                    JOptionPane.showMessageDialog(commentField, "la response y la response parent tienen que pertenecer a la misma pregunta", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (question.getResponseType().equals("seleccion") || question.getResponseType().equals("escrita")) {
+                    JOptionPane.showMessageDialog(commentField, "el response type de esta pregunta debe ser de seleccion", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 addResponseOptionUseCase.execute(responseOption);
 

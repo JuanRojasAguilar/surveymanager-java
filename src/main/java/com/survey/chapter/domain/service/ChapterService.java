@@ -10,7 +10,7 @@ public interface ChapterService {
 
   Optional<Chapter> searchById(int id);
 
-  Optional<List<Chapter>> showAll(int limit, int offset);
+  Optional<List<Chapter>> showAll();
 
   void update(Chapter chapter);
 

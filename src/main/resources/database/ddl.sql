@@ -81,6 +81,7 @@ CREATE TABLE response_options (
     parentresponse_id INT UNSIGNED,
     question_id INT UNSIGNED,
     update_at TIMESTAMP(6),
+    subresponse_type VARCHAR(20),
     comment_response TEXT,
     option_text TEXT,
     CONSTRAINT pk_id_response_options PRIMARY KEY (id),

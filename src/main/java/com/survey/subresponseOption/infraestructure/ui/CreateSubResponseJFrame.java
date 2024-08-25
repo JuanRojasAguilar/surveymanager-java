@@ -15,6 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.question.application.SearchQuestionByIdUseCase;
+import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 import com.survey.responseOption.domain.entity.ResponseOption;
 import com.survey.responseOption.infraestructure.ui.ResponseComboBox;
 import com.survey.subresponseOption.application.AddSubresponseOptionUseCase;
@@ -26,7 +30,8 @@ import com.survey.ui.StyleDefiner;
 public class CreateSubResponseJFrame extends JFrame {
     private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
     private AddSubresponseOptionUseCase addSubresponseOptionUseCase;
-
+    private QuestionService questionService = new QuestionRepository();
+    private SearchQuestionByIdUseCase searchQuestionByIdUseCase;
     private JButton returnButton;
 
     private ResponseComboBox responseComboBox;
@@ -98,6 +103,7 @@ public class CreateSubResponseJFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 addSubresponseOptionUseCase = new AddSubresponseOptionUseCase(subresponseOptionService);
+                searchQuestionByIdUseCase = new SearchQuestionByIdUseCase(questionService);
 
                 String subResponseText = subResponseTextfield.getText();
                 ResponseOption response = responseComboBox.getSelectedResponse();
@@ -108,6 +114,12 @@ public class CreateSubResponseJFrame extends JFrame {
                 }
 
                 subResponseTextfield.setText("");
+
+                Question question = searchQuestionByIdUseCase.execute(response.getIdQuestion()).get();
+                if (question.getResponseType().equals("escrita")) {
+                    JOptionPane.showMessageDialog(responseComboBox, "no se puede agregar subrespuestas a los campos de texto", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 SubresponseOption subresponseOption = new SubresponseOption();
                 subresponseOption.setSubresponseText(subResponseText);

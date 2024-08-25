@@ -28,6 +28,7 @@ public class Login extends JFrame {
     private UserRolService userRolService = new UserRolRepository();
     private AddUserRoleUseCase addUserRoleUseCase;
     private GetUserRolesUseCase getUserRolesUseCase;
+    private List<UserRol> userRols;
 
     JPanel loginPanel;
     JPanel resgisterPanel;
@@ -106,23 +107,27 @@ public class Login extends JFrame {
             String username = userField.getText();
             String password = new String(passwordField.getPassword());  
 
-            User user = searchUserUseCase.execute(username, password).get();
-            List<UserRol> userRols = getUserRolesUseCase.execute(user.getId());
-            if (userRols.size() == 1) {
-                UserRol userRol = userRols.get(0);
-                if (userRol.getRolId() == 1) {
-                    AdminJFrame adminJFrame = new AdminJFrame();
-                    adminJFrame.setReturnActionListener(returnSetVisibleFunction(adminJFrame));
-                    adminJFrame.setLocationRelativeTo(buttonsPanel);
-                    setVisible(false);
-                    adminJFrame.setVisible(true);
-                } else {
-                    UserForm userForm = new UserForm();
-                    userForm.setReturnActionListener(returnSetVisibleFunction(userForm));
-                    userForm.setLocationRelativeTo(buttonsPanel);
-                    setVisible(false);
-                    userForm.setVisible(true);
+            try {
+                user = searchUserUseCase.execute(username, password).get();
+                userRols = getUserRolesUseCase.execute(user.getId());
+                if (userRols.size() == 1) {
+                    UserRol userRol = userRols.get(0);
+                    if (userRol.getRolId() == 1) {
+                        AdminJFrame adminJFrame = new AdminJFrame();
+                        adminJFrame.setReturnActionListener(returnSetVisibleFunction(adminJFrame));
+                        adminJFrame.setLocationRelativeTo(buttonsPanel);
+                        setVisible(false);
+                        adminJFrame.setVisible(true);
+                    } else {
+                        UserForm userForm = new UserForm();
+                        userForm.setReturnActionListener(returnSetVisibleFunction(userForm));
+                        userForm.setLocationRelativeTo(buttonsPanel);
+                        setVisible(false);
+                        userForm.setVisible(true);
+                    }
                 }
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(enterButton, "usuario no existe");
             }
         });
         buttonsPanel.add(enterButton);
@@ -165,23 +170,27 @@ public class Login extends JFrame {
                     String username = userField.getText();
                     String password = new String(passwordField.getPassword());  
 
-                    User user = searchUserUseCase.execute(username, password).get();
-                    List<UserRol> userRols = getUserRolesUseCase.execute(user.getId());
-                    if (userRols.size() == 1) {
-                        UserRol userRol = userRols.get(0);
-                        if (userRol.getRolId() == 1) {
-                            AdminJFrame adminJFrame = new AdminJFrame();
-                            adminJFrame.setReturnActionListener(returnSetVisibleFunction(adminJFrame));
-                            adminJFrame.setLocationRelativeTo(buttonsPanel);
-                            setVisible(false);
-                            adminJFrame.setVisible(true);
-                        } else {
-                            UserForm userForm = new UserForm();
-                            userForm.setReturnActionListener(returnSetVisibleFunction(userForm));
-                            userForm.setLocationRelativeTo(buttonsPanel);
-                            setVisible(false);
-                            userForm.setVisible(true);
+                    try {
+                        user = searchUserUseCase.execute(username, password).get();
+                        userRols = getUserRolesUseCase.execute(user.getId());
+                        if (userRols.size() == 1) {
+                            UserRol userRol = userRols.get(0);
+                            if (userRol.getRolId() == 1) {
+                                AdminJFrame adminJFrame = new AdminJFrame();
+                                adminJFrame.setReturnActionListener(returnSetVisibleFunction(adminJFrame));
+                                adminJFrame.setLocationRelativeTo(buttonsPanel);
+                                setVisible(false);
+                                adminJFrame.setVisible(true);
+                            } else {
+                                UserForm userForm = new UserForm();
+                                userForm.setReturnActionListener(returnSetVisibleFunction(userForm));
+                                userForm.setLocationRelativeTo(buttonsPanel);
+                                setVisible(false);
+                                userForm.setVisible(true);
+                            }
                         }
+                    } catch (Exception exception) {
+                        JOptionPane.showMessageDialog(enterButton, "usuario no existe");
                     }
                 });
             }
