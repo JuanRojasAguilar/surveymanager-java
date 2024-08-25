@@ -16,22 +16,39 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.catalog.application.SearchCatalogByIdUseCase;
 import com.survey.catalog.domain.entity.Catalog;
+import com.survey.catalog.domain.service.CatalogService;
+import com.survey.catalog.infraestructure.repository.CatalogRepository;
 import com.survey.catalog.infraestructure.ui.CatalogComboBox;
-import com.survey.chapter.infraestructure.ui.ChapterComboBox;
+import com.survey.question.application.SearchQuestionByIdUseCase;
 import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 import com.survey.question.infraestructure.ui.QuestionComboBox;
+import com.survey.responseOption.application.SearchResponseOptionByIdUseCase;
+import com.survey.responseOption.application.UpdateResponseOptionUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.responseOption.domain.service.ResponseOptionService;
+import com.survey.responseOption.infraestructure.repository.ResponseOptionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class UpdateResponseJFrame extends JFrame{
-    //initializer de question
+    private ResponseOptionService responseOptionService = new ResponseOptionRepository();
+    private UpdateResponseOptionUseCase updateResponseOptionUseCase;
+    private SearchResponseOptionByIdUseCase searchResponseOptionByIdUseCase;
+    private CatalogService catalogService = new CatalogRepository();
+    private SearchCatalogByIdUseCase searchCatalogByIdUseCase;
+    private QuestionService questionService = new QuestionRepository();
+    private SearchQuestionByIdUseCase searchQuestionByIdUseCase;
+
     private JButton returnButton;
 
     private ResponseComboBox responseComboBoxMain;
     private ResponseComboBox responseComboBox;
     private QuestionComboBox questionComboBox;
     private CatalogComboBox catalogComboBox; 
+    private JComboBox<String> subResponseType;
     private JTextField commentField;
     private JTextField optionnField;
     private JButton updateButton;
@@ -53,6 +70,10 @@ public class UpdateResponseJFrame extends JFrame{
         responseComboBox = new ResponseComboBox();
         questionComboBox = new QuestionComboBox();
         catalogComboBox = new CatalogComboBox();
+        subResponseType = new JComboBox<>();
+        subResponseType.addItem("seleccion multiple");
+        subResponseType.addItem("seleccion");
+        subResponseType.addItem("escrita");
     }
 
     private void createUpdateFrame() {
@@ -74,13 +95,14 @@ public class UpdateResponseJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("response");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
         responseComboBoxMain.updateResponses();
-        formPanel.add(responseComboBox, gbc);
+        formPanel.add(responseComboBoxMain, gbc);
 
         row++;
         gbc.gridy = row;
@@ -103,7 +125,7 @@ public class UpdateResponseJFrame extends JFrame{
 
         gbc.gridx = 1;
         catalogComboBox.updateCatalogs();
-        questionComboBox.switcher(false);
+        catalogComboBox.switcher(false);
         formPanel.add(catalogComboBox, gbc);
 
         row++;
@@ -122,11 +144,22 @@ public class UpdateResponseJFrame extends JFrame{
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.WEST;
+        JLabel typeLabel = new JLabel("tipo: ");
+        formPanel.add(typeLabel, gbc);
+
+        gbc.gridx = 1;
+        subResponseType.setEnabled(false);
+        formPanel.add(subResponseType, gbc);
+
+        row++;
+        gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
         JLabel commentLabel = new JLabel("comment: ");
         formPanel.add(commentLabel, gbc);
 
         gbc.gridx = 1;
-        commentField = StyleDefiner.defineFieldStyle(commentField);
+        commentField = StyleDefiner.defineFieldStyle(new JTextField(20));
         commentField.setEditable(false);
         formPanel.add(commentField, gbc);
 
@@ -138,7 +171,7 @@ public class UpdateResponseJFrame extends JFrame{
         formPanel.add(optionLabel, gbc);
 
         gbc.gridx = 1;
-        optionnField = StyleDefiner.defineFieldStyle(optionnField);
+        optionnField = StyleDefiner.defineFieldStyle(new JTextField(20));
         optionnField.setEditable(false);
         formPanel.add(optionnField, gbc);
 
@@ -160,8 +193,11 @@ public class UpdateResponseJFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                updateResponseOptionUseCase = new UpdateResponseOptionUseCase(responseOptionService);
+
                 String comment = commentField.getText();
                 String option = optionnField.getText();
+                String type = (String) subResponseType.getSelectedItem();
                 ResponseOption response = responseComboBox.isActive() ? responseComboBox.getSelectedResponse() : null;
                 Question question = questionComboBox.getSelectedQuestion();
                 Catalog catalog = catalogComboBox.getSelectedCatalog();
@@ -174,14 +210,23 @@ public class UpdateResponseJFrame extends JFrame{
                 commentField.setText("");
                 optionnField.setText("");
 
-                ResponseOption responseOption = new ResponseOption();
-                responseOption.setCommentResponse(comment);
-                responseOption.setOptionText(option);
-                responseOption.setIdCategoryCatalog(catalog.getId());
-                if (response != null) {responseOption.setIdParentResponse(response.getId());}
-                responseOption.setIdQuestion(question.getId());
+                responseToEdit.setCommentResponse(comment);
+                responseToEdit.setOptionText(option);
+                responseToEdit.setSubresponseType(type);
+                responseToEdit.setIdCategoryCatalog(catalog.getId());
+                if (response != null) {responseToEdit.setIdParentResponse(response.getId());}
+                responseToEdit.setIdQuestion(question.getId());
 
-                //initializer
+                if (responseToEdit.getIdQuestion() != response.getIdQuestion()) {
+                    JOptionPane.showMessageDialog(commentField, "la response y la response parent tienen que pertenecer a la misma pregunta", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (question.getResponseType().equals("seleccion") || question.getResponseType().equals("escrita")) {
+                    JOptionPane.showMessageDialog(commentField, "el response type de esta pregunta debe ser de seleccion", "error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                updateResponseOptionUseCase.execute(responseToEdit);
 
                 JOptionPane.showMessageDialog(commentField, "response actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }
@@ -194,6 +239,10 @@ public class UpdateResponseJFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
+                    searchResponseOptionByIdUseCase = new SearchResponseOptionByIdUseCase(responseOptionService);
+                    searchCatalogByIdUseCase = new SearchCatalogByIdUseCase(catalogService);
+                    searchQuestionByIdUseCase = new SearchQuestionByIdUseCase(questionService);
+
                     responseToEdit = responseComboBoxMain.getSelectedResponse();
 
                     commentField.setText(responseToEdit.getCommentResponse());
@@ -202,18 +251,28 @@ public class UpdateResponseJFrame extends JFrame{
                     optionnField.setText(responseToEdit.getOptionText());
                     optionnField.setEditable(true);
 
-                    // innitializer catalog
+                    subResponseType.setSelectedItem(responseToEdit.getSubresponseType());
+                    subResponseType.setEnabled(true);
 
-                    catalogComboBox.setSelectedCatalog(catalog);
-                    catalogComboBox.switcher(true);
+                    
 
-                    // initializer de response
+                    if (responseToEdit.getIdCategoryCatalog() != 0) {
+                        Catalog catalog = searchCatalogByIdUseCase.execute(responseToEdit.getIdCategoryCatalog()).get();
+                        catalogComboBox.setIsActive(true);
+                        catalogComboBox.switcher(true);
+                        catalogComboBox.setSelectedCatalog(catalog);
+                    }
 
-                    responseComboBox.setSelectedResponse(response);
-                    responseComboBox.switcher(true);
+                    if (responseToEdit.getIdParentResponse() != 0) {
+                        ResponseOption response = searchResponseOptionByIdUseCase.execute(responseToEdit.getIdParentResponse()).get();
+                        responseComboBox.setIsActive(true);
+                        responseComboBox.switcher(true);
+                        responseComboBox.setSelectedResponse(response);
+                    }
 
-                    // inicializer de question 
-                    questionComboBox.setSelectedChapter(question);
+
+                    Question question = searchQuestionByIdUseCase.execute(responseToEdit.getIdQuestion()).get();
+                    questionComboBox.setSelectedQuestion(question);
                     questionComboBox.switcher(true);
                     
                     updateButton.setEnabled(true);

@@ -1,12 +1,14 @@
 package com.survey.subresponseOption.infraestructure.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,9 +18,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.survey.responseOption.domain.entity.ResponseOption;
-import com.survey.responseOption.infraestructure.ui.ResponseComboBox;
+import com.survey.subresponseOption.application.ShowAllSubresponseOptionsUseCase;
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
+import com.survey.subresponseOption.domain.service.SubresponseOptionService;
+import com.survey.subresponseOption.infraestructure.repository.SubresponseOptionRepository;
 
 public class ListSubResponsesJFrame extends JFrame{
     private DefaultTableModel model;
@@ -29,7 +32,8 @@ public class ListSubResponsesJFrame extends JFrame{
 
     private boolean initializer;
 
-    //initializer
+    private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
+    private ShowAllSubresponseOptionsUseCase showAllSubResponseOptionsUseCase;
 
     public ListSubResponsesJFrame() {
         initializer = true;
@@ -64,6 +68,7 @@ public class ListSubResponsesJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("SubResponse");
         formPanel.add(comboBoxLabel, gbc);
@@ -90,6 +95,7 @@ public class ListSubResponsesJFrame extends JFrame{
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
         }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 
@@ -99,10 +105,11 @@ public class ListSubResponsesJFrame extends JFrame{
     }
 
     private void showAllSubResponses() {
-        // initializar
+        showAllSubResponseOptionsUseCase = new ShowAllSubresponseOptionsUseCase(subresponseOptionService);
+        List<SubresponseOption> subResponses = showAllSubResponseOptionsUseCase.execute().get();
 
         subResponses.forEach(subResponse -> {
-            Object[] rowData = {response.getId(), response.getIdCategoryCatalog(), response.getIdParentResponse(), response.getIdQuestion(), response.getOptionText(), response.getCreateAt(), response.getUpdateAt()};
+            Object[] rowData = {subResponse.getId(), subResponse.getIdResponseOption(), subResponse.getSubresponseText(),  subResponse.getCreatedAt(), subResponse.getUpdatedAt()};
             model.addRow(rowData);
         });
     }
@@ -114,7 +121,7 @@ public class ListSubResponsesJFrame extends JFrame{
                 if (!initializer) {
                     SubresponseOption subResponse = subResponseComboBox.getSelectedSubResponse();
                     model.setRowCount(0);
-                    Object[] rowData = {subResponse.getId(), subResponse.getIdResponseOptions(), subResponse.getSubresponseText(), subResponse.getCreatedAt(), subResponse.getUpdatedAt()};
+                    Object[] rowData = {subResponse.getId(), subResponse.getIdResponseOption(), subResponse.getSubresponseText(),  subResponse.getCreatedAt(), subResponse.getUpdatedAt()};
                     model.addRow(rowData);
                 }
             }

@@ -15,10 +15,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.survey.application.UpdateSurveyUseCase;
+import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
+import com.survey.survey.infraestructure.repository.SurveyRepository;
 import com.survey.ui.StyleDefiner;
 
 public class UpdateSurveyJFrame extends JFrame {
-    //surveyInitializer 
+    private SurveyService surveyService = new SurveyRepository();
+    private UpdateSurveyUseCase updateSurveyUseCase; 
 
     private JButton returnButton;
 
@@ -29,7 +34,7 @@ public class UpdateSurveyJFrame extends JFrame {
 
     private boolean initializer;
 
-    private int idToUpdate;
+    private Survey surveyToUpdate;
 
     public UpdateSurveyJFrame() {
         
@@ -65,6 +70,7 @@ public class UpdateSurveyJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("survey");
         formPanel.add(comboBoxLabel, gbc);
@@ -113,6 +119,8 @@ public class UpdateSurveyJFrame extends JFrame {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                updateSurveyUseCase = new UpdateSurveyUseCase(surveyService);
+
                 String nombre = nombreField.getText();
                 String desc = descField.getText();
 
@@ -122,9 +130,10 @@ public class UpdateSurveyJFrame extends JFrame {
                     return;
                 }
 
-                //Survey survey = new Survey(nombre, desc);
+                surveyToUpdate.setName(nombre);
+                surveyToUpdate.setDescription(desc);
 
-                //initializer
+                updateSurveyUseCase.execute(surveyToUpdate);
 
                 JOptionPane.showMessageDialog(nombreField, "usuario actualizado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }
@@ -136,15 +145,12 @@ public class UpdateSurveyJFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (!initializer) {
-                    //Survey survey = surveyComboBox.getSelectedSurvey();
-                    nombreField.setText(survey.getName());
-                    descField.setText(survey.getDesc());
+                    surveyToUpdate = surveyComboBox.getSelectedSurvey();
+                    nombreField.setText(surveyToUpdate.getName());
+                    descField.setText(surveyToUpdate.getDescription());
                     nombreField.setEditable(true);
                     descField.setEditable(true);
                     updateButton.setEnabled(true);
-
-
-                    idToUpdate = survey.getId();
                 }
             }
         };

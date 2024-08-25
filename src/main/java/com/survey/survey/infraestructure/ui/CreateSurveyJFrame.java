@@ -15,10 +15,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.survey.survey.application.AddSurveyUseCase;
+import com.survey.survey.domain.entity.Survey;
+import com.survey.survey.domain.service.SurveyService;
+import com.survey.survey.infraestructure.repository.SurveyRepository;
 import com.survey.ui.StyleDefiner;
 
 public class CreateSurveyJFrame extends JFrame {
-    //surveyInitializer
+    private SurveyService surveyService = new SurveyRepository();
+    private AddSurveyUseCase addSurveyUseCase;
 
     private JButton returnButton;
 
@@ -48,6 +53,7 @@ public class CreateSurveyJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel nombreLabel = new JLabel("nombre: ");
         formPanel.add(nombreLabel, gbc);
@@ -82,6 +88,8 @@ public class CreateSurveyJFrame extends JFrame {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                addSurveyUseCase = new AddSurveyUseCase(surveyService);
+
                 String nombre = nombreField.getText();
                 String desc = descField.getText();
 
@@ -94,9 +102,11 @@ public class CreateSurveyJFrame extends JFrame {
                 nombreField.setText("");
                 descField.setText("");
 
-                //Survey survey = new Survey(nombre, desc);
+                Survey survey = new Survey();
+                survey.setName(nombre);
+                survey.setDescription(desc);
 
-                //initializer
+                addSurveyUseCase.execute(survey);
 
                 JOptionPane.showMessageDialog(nombreField, "usuario guardado", "accion completada", JOptionPane.WARNING_MESSAGE);
             }

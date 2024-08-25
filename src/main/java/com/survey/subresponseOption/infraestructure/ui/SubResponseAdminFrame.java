@@ -13,11 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.survey.responseOption.infraestructure.ui.CreateResponseJFrame;
-import com.survey.responseOption.infraestructure.ui.DeleteResponseJFrame;
-import com.survey.responseOption.infraestructure.ui.ListResponsesJFrame;
-import com.survey.responseOption.infraestructure.ui.UpdateResponseJFrame;
-
 public class SubResponseAdminFrame extends JFrame {
     private JButton returnButton;
 

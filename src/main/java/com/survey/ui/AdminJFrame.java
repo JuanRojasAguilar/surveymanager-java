@@ -13,9 +13,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.survey.catalog.infraestructure.ui.CatalogAdminFrame;
+import com.survey.chapter.infraestructure.ui.ChapterAdminFrame;
+import com.survey.question.infraestructure.ui.QuestionAdminFrame;
+import com.survey.responseOption.infraestructure.ui.ResponseAdminFrame;
+import com.survey.subresponseOption.infraestructure.ui.SubResponseAdminFrame;
 import com.survey.survey.infraestructure.ui.SurveyAdminFrame;
 
 public class AdminJFrame extends JFrame {
+
+    private JButton returnButton;
 
     public AdminJFrame() {
         createAdminFrame();
@@ -34,11 +41,7 @@ public class AdminJFrame extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton returnButton = new JButton("<--");
-        returnButton.addActionListener(e -> {
-            setVisible(false);
-            new Login();
-        });
+        returnButton = new JButton("<--");
         topPanel.add(returnButton);
         add(topPanel, BorderLayout.NORTH);
 
@@ -64,8 +67,11 @@ public class AdminJFrame extends JFrame {
         JButton chapterButton = new JButton("chapterManager");
         chapterButton.setPreferredSize(new Dimension(175, 75));
         chapterButton.addActionListener(e -> {
+            ChapterAdminFrame chapterAdminFrame = new ChapterAdminFrame();
+            chapterAdminFrame.setReturnActionListener(returnSetVisibleFunction(chapterAdminFrame));
+            chapterAdminFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            // metodo para invocar un chapter manager
+            chapterAdminFrame.setVisible(true);
         });
         buttonsPanel.add(chapterButton, gbc);
 
@@ -73,8 +79,11 @@ public class AdminJFrame extends JFrame {
         JButton questionButton = new JButton("questionManager");
         questionButton.setPreferredSize(new Dimension(175, 75));
         questionButton.addActionListener(e -> {
+            QuestionAdminFrame questionAdminFrame = new QuestionAdminFrame();
+            questionAdminFrame.setReturnActionListener(returnSetVisibleFunction(questionAdminFrame));
+            questionAdminFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            // metodo para invocar un question manager
+            questionAdminFrame.setVisible(true);
         });
         buttonsPanel.add(questionButton, gbc);
 
@@ -84,8 +93,12 @@ public class AdminJFrame extends JFrame {
         JButton responseButton = new JButton("responseManager");
         responseButton.setPreferredSize(new Dimension(175, 75));
         responseButton.addActionListener(e -> {
+            ResponseAdminFrame responseAdminFrame = new ResponseAdminFrame();
+            responseAdminFrame.setReturnActionListener(returnSetVisibleFunction(responseAdminFrame));
+            responseAdminFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            // metodo para invocar un response manager
+            responseAdminFrame.setVisible(true);
+            
         });
         buttonsPanel.add(responseButton, gbc);
 
@@ -93,8 +106,11 @@ public class AdminJFrame extends JFrame {
         JButton subResponseButton = new JButton("subResponseManager");
         subResponseButton.setPreferredSize(new Dimension(175, 75));
         subResponseButton.addActionListener(e -> {
+            SubResponseAdminFrame subResponseAdminFrame = new SubResponseAdminFrame();
+            subResponseAdminFrame.setReturnActionListener(returnSetVisibleFunction(subResponseAdminFrame));
+            subResponseAdminFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            // metodo para invocar un subResponse manager
+            subResponseAdminFrame.setVisible(true);
         });
         buttonsPanel.add(subResponseButton, gbc);
 
@@ -102,8 +118,11 @@ public class AdminJFrame extends JFrame {
         JButton catalogButton = new JButton("catalogManager");
         catalogButton.setPreferredSize(new Dimension(175, 75));
         catalogButton.addActionListener(e -> {
+            CatalogAdminFrame catalogAdminFrame = new CatalogAdminFrame();
+            catalogAdminFrame.setReturnActionListener(returnSetVisibleFunction(catalogAdminFrame));
+            catalogAdminFrame.setLocationRelativeTo(buttonsPanel);
             setVisible(false);
-            // metodo para invocar un catalog manager
+            catalogAdminFrame.setVisible(true);
         });
         buttonsPanel.add(catalogButton, gbc);
 
@@ -119,6 +138,10 @@ public class AdminJFrame extends JFrame {
                     setVisible(true);
                 }
         };
+    }
+
+    public void setReturnActionListener(ActionListener actionListener) {
+        returnButton.addActionListener(actionListener);
     }
 
 }

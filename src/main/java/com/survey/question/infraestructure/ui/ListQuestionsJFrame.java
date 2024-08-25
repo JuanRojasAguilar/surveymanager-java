@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,8 +18,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import com.survey.chapter.infraestructure.ui.ChapterComboBox;
+import com.survey.question.application.ShowAllQuestionsUseCase;
 import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 
 public class ListQuestionsJFrame extends JFrame {
     private DefaultTableModel model;
@@ -27,9 +30,11 @@ public class ListQuestionsJFrame extends JFrame {
     private QuestionComboBox questionComboBox;
     private JButton returnButton;
 
+    private ShowAllQuestionsUseCase showAllQuestionsUseCase;
+    private QuestionService questionService = new QuestionRepository();
+
     private boolean initializer;
 
-    //initializer
 
     public ListQuestionsJFrame() {
         initializer = true;
@@ -90,6 +95,7 @@ public class ListQuestionsJFrame extends JFrame {
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
         }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 
@@ -100,10 +106,12 @@ public class ListQuestionsJFrame extends JFrame {
     }
 
     private void showAllQuestions() {
-        //list from initializer
+        showAllQuestionsUseCase = new ShowAllQuestionsUseCase(questionService);
+
+        List<Question> questions = showAllQuestionsUseCase.execute(10, 0).get();
 
         questions.forEach(question -> {
-            Object[] rowData = {question.getId(), question.getIdChapter(), question.getQuestionNumber(), question.getResponseType(), question.getQuestionText(), question.getCreateAt(), question.getUpdateAt()};
+            Object[] rowData = {question.getId(), question.getIdChapter(), question.getQuestionNumber(), question.getResponseType(), question.getQuestionText(), question.getCreatedAt(), question.getUpdatedAt()};
             model.addRow(rowData);
         });
     }
@@ -115,7 +123,7 @@ public class ListQuestionsJFrame extends JFrame {
                 if (!initializer) {
                     Question question = questionComboBox.getSelectedQuestion();
                     model.setRowCount(0);
-                    Object[] rowData = {question.getId(), question.getIdChapter(), question.getQuestionNumber(), question.getResponseType(), question.getQuestionText(), question.getCreateAt(), question.getUpdateAt()};
+                    Object[] rowData = {question.getId(), question.getIdChapter(), question.getQuestionNumber(), question.getResponseType(), question.getQuestionText(), question.getCreatedAt(), question.getUpdatedAt()};
                     model.addRow(rowData);
                 }
             }

@@ -1,6 +1,7 @@
 package com.survey.responseOption.infraestructure.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.List;
 
@@ -8,18 +9,27 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.survey.question.domain.entity.Question;
+import com.survey.responseOption.application.ShowAllResponseOptionsUseCase;
 import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.responseOption.domain.service.ResponseOptionService;
+import com.survey.responseOption.infraestructure.repository.ResponseOptionRepository;
 
 public class ResponseComboBox extends JPanel{
-    private  JComboBox<ResponseOption> responseOptionComboBox;
+    private JComboBox<ResponseOption> responseOptionComboBox;
+    private JButton activar;
+    
     private boolean isActive = false;
+
+    private ResponseOptionService responseOptionService = new ResponseOptionRepository();
+    private ShowAllResponseOptionsUseCase showAllResponseOptionsUseCase;
 
     public ResponseComboBox() {
         responseOptionComboBox = new JComboBox<>();
-        JButton activar = new JButton("x");
+        responseOptionComboBox.setPreferredSize(new Dimension(120, 30));
+        responseOptionComboBox.setEnabled(false);
+        activar = new JButton("x");
         activar.addActionListener(e -> {
-            responseOptionComboBox.setEditable(!isActive);
+            responseOptionComboBox.setEnabled(!isActive);
             isActive = !isActive;
         });
 
@@ -39,19 +49,22 @@ public class ResponseComboBox extends JPanel{
     }
 
     public void updateResponses() {
-        List<ResponseOption> responses = //initializerResponses
+        showAllResponseOptionsUseCase = new ShowAllResponseOptionsUseCase(responseOptionService);
+        List<ResponseOption> responses = showAllResponseOptionsUseCase.execute().get();
         responseOptionComboBox.removeAllItems();
         responses.forEach(response -> {
             responseOptionComboBox.addItem(response);
         });
 
         if (responseOptionComboBox.getItemCount() == 0) {
-            responseOptionComboBox.setEditable(false);
+            responseOptionComboBox.setEnabled(false);
         }
     }
 
     public void switcher(boolean swich) {
-        responseOptionComboBox.setEditable(swich);
+        activar.setEnabled(swich);
+        responseOptionComboBox.setEnabled(swich);
+        isActive = swich;
     }
 
     public void setSelectedResponse(ResponseOption responseOption) {
@@ -65,5 +78,9 @@ public class ResponseComboBox extends JPanel{
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public void setIsActive(boolean swich) {
+        isActive = swich;
     }
 }

@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS survey_jr;
+DROP DATABASE IF EXISTS sourvey_jr;
 
-CREATE DATABASE survey_jr;
-USE survey_jr
+CREATE DATABASE sourvey_jr;
+USE sourvey_jr
 
 -- tables for user login
 CREATE TABLE roles (
@@ -12,7 +12,7 @@ CREATE TABLE roles (
 
 CREATE TABLE users (
     id INT UNSIGNED AUTO_INCREMENT,
-    enable boolean,
+    `enable` boolean,
     username VARCHAR(12) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     CONSTRAINT pk_id_users PRIMARY KEY (id)
@@ -81,6 +81,7 @@ CREATE TABLE response_options (
     parentresponse_id INT UNSIGNED,
     question_id INT UNSIGNED,
     update_at TIMESTAMP(6),
+    subresponse_type VARCHAR(20),
     comment_response TEXT,
     option_text TEXT,
     CONSTRAINT pk_id_response_options PRIMARY KEY (id),

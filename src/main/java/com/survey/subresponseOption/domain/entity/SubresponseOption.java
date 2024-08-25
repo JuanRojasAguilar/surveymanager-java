@@ -59,4 +59,9 @@ public class SubresponseOption {
     public void setSubresponseText(String subresponseText) {
         this.subresponseText = subresponseText;
     }
+
+    @Override
+    public String toString() {
+      return this.subresponseText;
+    }
 }

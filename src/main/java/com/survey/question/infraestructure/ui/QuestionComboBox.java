@@ -1,20 +1,26 @@
 package com.survey.question.infraestructure.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.survey.chapter.domain.entity.Chapter;
+import com.survey.question.application.ShowAllQuestionsUseCase;
 import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 
 public class QuestionComboBox extends JPanel {
     private JComboBox<Question> questionComboBox;
+    private ShowAllQuestionsUseCase showAllQuestionsUseCase;
+    private QuestionService questionRepository = new QuestionRepository();
     
     public QuestionComboBox() {
         questionComboBox = new JComboBox<>();
+        questionComboBox.setPreferredSize(new Dimension(120, 30));
 
         setLayout(new BorderLayout());
 
@@ -31,7 +37,8 @@ public class QuestionComboBox extends JPanel {
     }
 
     public void updateQuestions() {
-        List<Question> questions = //InitializerChapter 
+        showAllQuestionsUseCase = new ShowAllQuestionsUseCase(questionRepository);
+        List<Question> questions = showAllQuestionsUseCase.execute(10, 0).get();
         questionComboBox.removeAllItems();
         questions.forEach(question -> {
             questionComboBox.addItem(question);
@@ -43,7 +50,9 @@ public class QuestionComboBox extends JPanel {
     }
 
     public void switcher(boolean swich) {
-        questionComboBox.setEditable(swich);
+        questionComboBox.setEnabled(swich);
+        revalidate();
+        repaint();
     }
 
     public void setSelectedQuestion(Question question) {

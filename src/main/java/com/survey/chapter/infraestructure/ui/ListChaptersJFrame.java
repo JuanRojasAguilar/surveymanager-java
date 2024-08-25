@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import com.survey.chapter.application.ShowAllChaptersUseCase;
 import com.survey.chapter.domain.entity.Chapter;
 import com.survey.chapter.domain.service.ChapterService;
+import com.survey.chapter.infraestructure.repository.ChapterRepository;
 
 public class ListChaptersJFrame extends JFrame{
     private DefaultTableModel model;
@@ -28,12 +29,12 @@ public class ListChaptersJFrame extends JFrame{
     private JScrollPane scrollPane;
     private ChapterComboBox chapterComboBox;
     private JButton returnButton;
+    
     private ShowAllChaptersUseCase showAllChaptersUseCase;
-    private ChapterService chapterService;
+    private ChapterService chapterService = new ChapterRepository();
 
     private boolean initializer;
 
-    //initializer
 
     public ListChaptersJFrame() {
         initializer = true;
@@ -68,6 +69,7 @@ public class ListChaptersJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Chapter");
         formPanel.add(comboBoxLabel, gbc);
@@ -86,13 +88,14 @@ public class ListChaptersJFrame extends JFrame{
         String[] columnNames = {"id", "idSurvey", "chapterNumber", "chapterTitle", "createdAt", "updateAt"};
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
-        table.setRowHeight(100);
+        table.setRowHeight(30);
         table.setEnabled(false);
         int columnWidth = 500 / columnNames.length; 
         for (int i = 0; i < columnNames.length; i++ ) {
             table.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
         }
 
+        scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(500, 300)); 
         formPanel.add(scrollPane, gbc);
 
@@ -103,7 +106,7 @@ public class ListChaptersJFrame extends JFrame{
 
     private void showAllChapters() {
         showAllChaptersUseCase = new ShowAllChaptersUseCase(chapterService);
-        List<Chapter> chapters = showAllChaptersUseCase.execute(10, 0).get();
+        List<Chapter> chapters = showAllChaptersUseCase.execute().get();
 
         chapters.forEach(chapter -> {
             Object[] rowData = {chapter.getId(), chapter.getIdSurvey(), chapter.getChapterNumber(), chapter.getChapterTitle(), chapter.getCreatedAt(), chapter.getUpdatedAt()};

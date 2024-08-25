@@ -1,23 +1,27 @@
 package com.survey.survey.infraestructure.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import com.survey.survey.application.ShowAllSurveysUseCase;
 import com.survey.survey.domain.entity.Survey;
 import com.survey.survey.domain.service.SurveyService;
+import com.survey.survey.infraestructure.repository.SurveyRepository;
 
 public class SurveyComboBox extends JPanel{
-    //survey Initializer
     private JComboBox<Survey> surveyComboBox;
+
     private ShowAllSurveysUseCase showAllSurveysUseCase;
-    private SurveyService surveyService;
+    private SurveyService surveyService = new SurveyRepository();
 
     public SurveyComboBox() {
-        surveyComboBox = new JComboBox();
+        surveyComboBox = new JComboBox<>();
+        surveyComboBox.setPreferredSize(new Dimension(120, 30));
 
         setLayout(new BorderLayout());
 
@@ -25,7 +29,7 @@ public class SurveyComboBox extends JPanel{
     }
 
     public SurveyComboBox(ActionListener actionListenerComboBox) {
-        surveyComboBox = new JComboBox();
+        surveyComboBox = new JComboBox<>();
         surveyComboBox.addActionListener(actionListenerComboBox);
 
         setLayout(new BorderLayout());
@@ -35,7 +39,7 @@ public class SurveyComboBox extends JPanel{
 
     public void updateSurveys() {
         showAllSurveysUseCase = new ShowAllSurveysUseCase(surveyService);
-        List<Survey> surveys = showAllSurveysUseCase.execute(10, 0).get();
+        List<Survey> surveys = showAllSurveysUseCase.execute().get();
         
         surveyComboBox.removeAllItems();
         surveys.forEach(survey -> {
@@ -48,7 +52,9 @@ public class SurveyComboBox extends JPanel{
     }
 
     public void switcher(boolean swich) {
-        surveyComboBox.setEditable(swich);
+        surveyComboBox.setEnabled(swich);
+        revalidate();
+        repaint();
     }
 
     public void setSelectedSurvey(Survey survey) {

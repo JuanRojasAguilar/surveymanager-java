@@ -16,15 +16,15 @@ import javax.swing.JPanel;
 import com.survey.catalog.application.DeleteCatalogUseCase;
 import com.survey.catalog.domain.entity.Catalog;
 import com.survey.catalog.domain.service.CatalogService;
+import com.survey.catalog.infraestructure.repository.CatalogRepository;
 import com.survey.ui.StyleDefiner;
 
 public class DeleteCatalogJFrame extends JFrame{
     private CatalogComboBox catalogComboBox;
     private JButton returnButton;
-    private CatalogService catalogService;
+    private CatalogService catalogService = new CatalogRepository();
     private DeleteCatalogUseCase deleteCatalogUseCase;
 
-    //initializer
 
     public DeleteCatalogJFrame() {
         initComponents();
@@ -55,6 +55,7 @@ public class DeleteCatalogJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Catalog");
         formPanel.add(comboBoxLabel, gbc);
@@ -82,6 +83,9 @@ public class DeleteCatalogJFrame extends JFrame{
                 catalogComboBox.updateCatalogs();
             }
         });
+        formPanel.add(deleteButton, gbc);
+
+        add(formPanel, BorderLayout.CENTER);
     }
     
     public void setReturnActionListener(ActionListener actionListener) {

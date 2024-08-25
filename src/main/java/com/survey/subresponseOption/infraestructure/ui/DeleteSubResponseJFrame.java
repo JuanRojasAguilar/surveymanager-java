@@ -13,15 +13,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.subresponseOption.application.DeleteSubresponseOptionUseCase;
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
+import com.survey.subresponseOption.domain.service.SubresponseOptionService;
+import com.survey.subresponseOption.infraestructure.repository.SubresponseOptionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class DeleteSubResponseJFrame extends JFrame{
     private SubResponseComboBox subResponseComboBox;
     private JButton returnButton;
 
-    //initializer
+    private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
+    private DeleteSubresponseOptionUseCase deleteSubresponseOptionUseCase;
 
     public DeleteSubResponseJFrame() {
         initComponents();
@@ -50,6 +53,7 @@ public class DeleteSubResponseJFrame extends JFrame{
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("SubResponse");
         formPanel.add(comboBoxLabel, gbc);
@@ -66,15 +70,21 @@ public class DeleteSubResponseJFrame extends JFrame{
         JButton deleteButton = StyleDefiner.defineButtonStyle(new JButton("Borrar"));
         deleteButton.addActionListener(e -> {
             SubresponseOption subResponseOption = subResponseComboBox.getSelectedSubResponse();
-
+            
             int continuar = JOptionPane.showConfirmDialog(subResponseComboBox, "seguro que quieres eliminar a este response?", "¿?", JOptionPane.YES_NO_OPTION);
-
+            
             if (continuar == 0) {
-                // initializer del delete
-                JOptionPane.showMessageDialog(null, "eliminado correctamente", "eliminado", JOptionPane.INFORMATION_MESSAGE);
+                deleteSubresponseOptionUseCase = new DeleteSubresponseOptionUseCase(subresponseOptionService);
+                boolean hasBeenDeleted = deleteSubresponseOptionUseCase.execute(subResponseOption.getId()); 
+                String mensaje = hasBeenDeleted ? "eliminado correctamente" : "No hemos podido eliminarlo, intenta de nuevo";
+                JOptionPane.showMessageDialog(null, mensaje, "eliminado", JOptionPane.INFORMATION_MESSAGE);
                 subResponseComboBox.updateSubResponses();
             }
         });
+
+        formPanel.add(deleteButton, gbc);
+
+        add(formPanel, BorderLayout.CENTER);
     }
 
     public void setReturnActionListener(ActionListener actionListener) {

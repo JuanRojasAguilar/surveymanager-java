@@ -1,21 +1,27 @@
 package com.survey.subresponseOption.infraestructure.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-import com.survey.responseOption.domain.entity.ResponseOption;
+import com.survey.subresponseOption.application.ShowAllSubresponseOptionsUseCase;
 import com.survey.subresponseOption.domain.entity.SubresponseOption;
+import com.survey.subresponseOption.domain.service.SubresponseOptionService;
+import com.survey.subresponseOption.infraestructure.repository.SubresponseOptionRepository;
 
-public class SubResponseComboBox extends JFrame{
+public class SubResponseComboBox extends JPanel{
+    private SubresponseOptionService subresponseOptionService = new SubresponseOptionRepository();
+    private ShowAllSubresponseOptionsUseCase showAllSubresponseOptionsUseCase;
+
     private JComboBox<SubresponseOption> subresponseOptionComboBox;
     
     public SubResponseComboBox() {
         subresponseOptionComboBox = new JComboBox<>();
+        subresponseOptionComboBox.setPreferredSize(new Dimension(120, 30));
         
         setLayout(new BorderLayout());
 
@@ -24,6 +30,7 @@ public class SubResponseComboBox extends JFrame{
 
     public SubResponseComboBox(ActionListener actionListener) {
         subresponseOptionComboBox = new JComboBox<>();
+        subresponseOptionComboBox.addActionListener(actionListener);
 
         setLayout(new BorderLayout());
 
@@ -31,7 +38,8 @@ public class SubResponseComboBox extends JFrame{
     }
 
     public void updateSubResponses() {
-        List<SubresponseOption> subResponses = //initializerResponses
+        showAllSubresponseOptionsUseCase = new ShowAllSubresponseOptionsUseCase(subresponseOptionService);
+        List<SubresponseOption> subResponses = showAllSubresponseOptionsUseCase.execute().get();
         subresponseOptionComboBox.removeAllItems();
         subResponses.forEach(subResponse -> {
             subresponseOptionComboBox.addItem(subResponse);

@@ -13,14 +13,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.survey.question.application.DeleteQuestionUseCase;
 import com.survey.question.domain.entity.Question;
+import com.survey.question.domain.service.QuestionService;
+import com.survey.question.infraestructure.repository.QuestionRepository;
 import com.survey.ui.StyleDefiner;
 
 public class DeleteQuestionJFrame extends JFrame {
     private QuestionComboBox questionComboBox;
     private JButton returnButton;
 
-    //initializer
+    private QuestionService questionService = new QuestionRepository();
+    private DeleteQuestionUseCase deleteQuestionUseCase;
 
     public DeleteQuestionJFrame() {
         initComponents();
@@ -51,13 +55,14 @@ public class DeleteQuestionJFrame extends JFrame {
 
         int row = 0;
         gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         JLabel comboBoxLabel = new JLabel("Question");
         formPanel.add(comboBoxLabel, gbc);
 
         gbc.gridx = 1;
         questionComboBox.updateQuestions();
-        formPanel.add(questionComboBox);
+        formPanel.add(questionComboBox, gbc);
 
         row++;
         gbc.gridx = 0;
@@ -71,11 +76,17 @@ public class DeleteQuestionJFrame extends JFrame {
             int continuar = JOptionPane.showConfirmDialog(questionComboBox, "seguro que quieres eliminar a este question?", "¿?", JOptionPane.YES_NO_OPTION);
 
             if (continuar == 0) {
-                // initializer del delete
-                JOptionPane.showMessageDialog(null, "eliminado correctamente", "eliminado", JOptionPane.INFORMATION_MESSAGE);
+                deleteQuestionUseCase = new DeleteQuestionUseCase(questionService);
+                boolean hasBeenDeleted = deleteQuestionUseCase.execute(question.getId());
+                String mensaje = hasBeenDeleted ? "eliminado correctamente" : "No hemos podido eliminarlo, intenta de nuevo";
+                JOptionPane.showMessageDialog(null, mensaje, "eliminado", JOptionPane.INFORMATION_MESSAGE);
                 questionComboBox.updateQuestions();
             }
         });
+
+        formPanel.add(deleteButton, gbc);
+
+        add(formPanel, BorderLayout.CENTER);
     }
 
     public void setReturnActionListener(ActionListener actionListener) {

@@ -13,7 +13,7 @@ public class ShowAllChaptersUseCase {
     this.chapterService = chapterService;
   }
 
-  public Optional<List<Chapter>> execute(int limit, int offset) {
-    return this.chapterService.showAll(limit, offset);
+  public Optional<List<Chapter>> execute() {
+    return this.chapterService.showAll();
   }
 }
