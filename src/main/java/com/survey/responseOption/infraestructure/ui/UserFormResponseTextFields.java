@@ -3,8 +3,8 @@ package com.survey.responseOption.infraestructure.ui;
 import com.survey.responseOption.domain.entity.ResponseOption;
 import com.survey.responsequestion.application.AddResponseQuestionUseCase;
 import com.survey.responsequestion.domain.entity.ResponseQuestion;
-import com.survey.responsequestion.domain.infrastructure.repository.ResponseQuestionRepository;
-import com.survey.responsequestion.service.ResponseQuestionService;
+import com.survey.responsequestion.domain.service.ResponseQuestionService;
+import com.survey.responsequestion.infrastructure.repository.ResponseQuestionRepository;
 
 import javax.swing.*;
 import java.awt.*;

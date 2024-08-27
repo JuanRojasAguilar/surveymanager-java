@@ -110,6 +110,7 @@ CREATE TABLE response_questions (
     response_id INT UNSIGNED,
     subresponse_id INT UNSIGNED,
     responsetext VARCHAR(80),
+    create_at TIMESTAMP(6) DEFAULT (NOW()),
     CONSTRAINT pk_id_response_questions PRIMARY KEY (id),
     CONSTRAINT fk_response_id_response_questions FOREIGN KEY (response_id)
     REFERENCES response_options(id),

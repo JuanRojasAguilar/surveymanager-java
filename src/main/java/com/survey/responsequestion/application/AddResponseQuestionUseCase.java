@@ -1,7 +1,7 @@
 package com.survey.responsequestion.application;
 
 import com.survey.responsequestion.domain.entity.ResponseQuestion;
-import com.survey.responsequestion.service.ResponseQuestionService;
+import com.survey.responsequestion.domain.service.ResponseQuestionService;
 
 public class AddResponseQuestionUseCase {
     private ResponseQuestionService responseQuestionService;

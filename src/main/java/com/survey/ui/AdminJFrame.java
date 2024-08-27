@@ -17,6 +17,7 @@ import com.survey.catalog.infraestructure.ui.CatalogAdminFrame;
 import com.survey.chapter.infraestructure.ui.ChapterAdminFrame;
 import com.survey.question.infraestructure.ui.QuestionAdminFrame;
 import com.survey.responseOption.infraestructure.ui.ResponseAdminFrame;
+import com.survey.responsequestion.infrastructure.ui.ResponseQuestionLog;
 import com.survey.subresponseOption.infraestructure.ui.SubResponseAdminFrame;
 import com.survey.survey.infraestructure.ui.SurveyAdminFrame;
 
@@ -126,6 +127,20 @@ public class AdminJFrame extends JFrame {
         });
         buttonsPanel.add(catalogButton, gbc);
 
+        row++;
+        gbc.gridy = row;
+        gbc.gridx = 1;
+        JButton logButton = new JButton("logManager");
+        logButton.setPreferredSize(new Dimension(175, 75));
+        logButton.addActionListener(e -> {
+            ResponseQuestionLog responseQuestionLog = new ResponseQuestionLog();
+            responseQuestionLog.setReturnActionListener(returnSetVisibleFunction(responseQuestionLog));
+            responseQuestionLog.setLocationRelativeTo(buttonsPanel);
+            setVisible(false);
+            responseQuestionLog.setVisible(true);
+            
+        });
+        buttonsPanel.add(logButton, gbc);
 
         add(buttonsPanel, BorderLayout.CENTER);
     }
